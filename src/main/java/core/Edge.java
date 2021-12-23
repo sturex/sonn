@@ -13,12 +13,8 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
 
     @Override
     public void accept(Flow flow) {
-        this.flow = combine(this.flow, flow);
+        this.flow = flow;
         output.collectInput();
-    }
-
-    protected Flow combine(Flow inputFlow, Flow innerFlow) {
-        return Flow.RUN;
     }
 
     @Override

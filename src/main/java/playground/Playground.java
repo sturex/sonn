@@ -1,8 +1,6 @@
 package playground;
 
-import neural.Effector;
 import neural.Network;
-import neural.Receptor;
 
 public class Playground {
 
@@ -10,13 +8,11 @@ public class Playground {
 
         Network network = new Network();
 
-        Receptor receptor = new Receptor(() -> true);
-        Effector effector = new Effector(() -> {});
+        network.addReceptor(() -> true);
+        network.addEffector(() -> {});
 
-        network.addInput(receptor);
-        network.addOutput(effector);
+        network.tick();
 
-        network.triggerRelease();
     }
 
 }

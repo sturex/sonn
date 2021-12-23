@@ -7,22 +7,18 @@ import core.Node;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
-public class Receptor extends Node<FlowSupplier, Synapse<Receptor, Neuron>> implements FlowSupplier {
+class Receptor extends Node<FlowSupplier, Synapse<Receptor, Neuron>> {
 
-    private final BooleanSupplier booleanSupplier;
+    private final Network network;
 
-    public Receptor(BooleanSupplier booleanSupplier) {
-        this.booleanSupplier = booleanSupplier;
+    Receptor(Network network, BooleanSupplier booleanSupplier) {
+        this.network = network;
+        addInput(FlowSupplier.of(booleanSupplier));
     }
 
     @Override
-    public Flow get() {
-        return Flow.from(booleanSupplier);
-    }
-
-    @Override
-    public void release(Stream<FlowSupplier> stream) {
-
+    public Flow converge(Stream<FlowSupplier> stream) {
+        return Flow.converge(stream);
     }
 
     @Override

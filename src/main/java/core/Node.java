@@ -2,7 +2,6 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
@@ -11,18 +10,15 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     private final List<U> outputs = new ArrayList<>();
     private long collectedInputCounter;
 
-    public final void forEachOutput(Consumer<U> uConsumer) {
-        outputs.forEach(uConsumer);
-    }
-
     final void collectInput() {
         if (everyInputCollected()) {
-            triggerRelease();
+            triggerConverge();
         }
     }
 
-    public final void triggerRelease(){
-        release(inputs.stream());
+    public final void triggerConverge(){
+        Flow flow = converge(inputs.stream());
+        outputs.forEach(output -> output.accept(flow));
         backpass(outputs.stream());
     }
 
@@ -42,7 +38,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         return false;
     }
 
-    public abstract void release(Stream<T> stream);
+    public abstract Flow converge(Stream<T> stream);
 
     public abstract void backpass(Stream<U> stream);
 

@@ -6,22 +6,18 @@ import core.Node;
 
 import java.util.stream.Stream;
 
-public class Effector extends Node<Synapse<Neuron, Effector>, FlowConsumer> implements FlowConsumer {
+class Effector extends Node<Synapse<Neuron, Effector>, FlowConsumer> {
 
-    private final Runnable runnable;
+    private final Network network;
 
-    public Effector(Runnable runnable) {
-        this.runnable = runnable;
+    Effector(Network network, Runnable runnable) {
+        this.network = network;
+        addOutput(flow -> flow.start(runnable));
     }
 
     @Override
-    public void accept(Flow flow) {
-        flow.start(runnable);
-    }
-
-    @Override
-    public void release(Stream<Synapse<Neuron, Effector>> stream) {
-
+    public Flow converge(Stream<Synapse<Neuron, Effector>> stream) {
+        return Network.converge(stream);
     }
 
     @Override

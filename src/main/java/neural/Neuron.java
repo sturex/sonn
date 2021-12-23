@@ -1,10 +1,17 @@
 package neural;
 
+import core.Flow;
 import core.Node;
 
 import java.util.stream.Stream;
 
-public class Neuron extends Node<Synapse<Neuron, Neuron>, Synapse<Neuron, Neuron>> {
+class Neuron extends Node<Synapse<Neuron, Neuron>, Synapse<Neuron, Neuron>> {
+
+    private final Network network;
+
+    Neuron(Network network) {
+        this.network = network;
+    }
 
     @Override
     public void backpass(Stream<Synapse<Neuron, Neuron>> stream) {
@@ -12,7 +19,7 @@ public class Neuron extends Node<Synapse<Neuron, Neuron>, Synapse<Neuron, Neuron
     }
 
     @Override
-    public void release(Stream<Synapse<Neuron, Neuron>> stream) {
-
+    public Flow converge(Stream<Synapse<Neuron, Neuron>> stream) {
+        return Network.converge(stream);
     }
 }
