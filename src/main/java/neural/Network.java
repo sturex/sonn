@@ -1,7 +1,6 @@
 package neural;
 
-import core.Flow;
-import core.Node;
+import core.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,19 +8,23 @@ import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
-public class Network {
+public class Network implements NodeEventListener {
 
     private final List<Receptor> receptors = new ArrayList<>();
     private final List<Effector> effectors = new ArrayList<>();
 
-    static Flow converge(Stream<? extends Synapse<?, ?>> stream) {
-        if (stream.anyMatch(s -> s.get() == Flow.RUN && s.getType() == Synapse.Type.INHIBITORY)) {
+    static Flow convergeForward(Stream<? extends Synapse<?, ?>> stream) {
+        if (stream.anyMatch(s -> s.getForward() == Flow.RUN && s.getType() == Synapse.Type.INHIBITORY)) {
             return Flow.STILL;
-        } else if (stream.anyMatch(s -> s.get() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
+        } else if (stream.anyMatch(s -> s.getForward() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
             return Flow.RUN;
         } else {
             return Flow.STILL;
         }
+    }
+
+    public static Flow convergeBackward(Stream<? extends Synapse<?, ?>> stream) {
+        return null;
     }
 
     public void addReceptor(BooleanSupplier booleanSupplier) {
@@ -38,5 +41,12 @@ public class Network {
 
     public void tick() {
         receptors.forEach(Node::triggerConverge);
+        effectors.forEach(Node::triggerBackpass);
     }
+
+    @Override
+    public Flow onFlowsCrossed(Node<?, ?> node, Flow forwardFlow, Flow backwardFlow) {
+        return null;
+    }
+
 }

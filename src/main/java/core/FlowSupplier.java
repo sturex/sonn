@@ -1,11 +1,10 @@
 package core;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
-public interface FlowSupplier extends Supplier<Flow> {
+public interface FlowSupplier {
 
-    static FlowSupplier of(BooleanSupplier booleanSupplier) {
-        return booleanSupplier.getAsBoolean() ? () -> Flow.RUN : () -> Flow.STILL;
-    }
+    void acceptBackward(Flow flow);
+
+    Flow getForward();
 }

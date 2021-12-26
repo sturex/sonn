@@ -7,19 +7,17 @@ import java.util.stream.Stream;
 
 class Neuron extends Node<Synapse<Neuron, Neuron>, Synapse<Neuron, Neuron>> {
 
-    private final Network network;
-
     Neuron(Network network) {
-        this.network = network;
+        super(network);
     }
 
     @Override
-    public void backpass(Stream<Synapse<Neuron, Neuron>> stream) {
-
+    public Flow convergeBackward(Stream<Synapse<Neuron, Neuron>> stream) {
+        return Network.convergeBackward(stream);
     }
 
     @Override
-    public Flow converge(Stream<Synapse<Neuron, Neuron>> stream) {
-        return Network.converge(stream);
+    public Flow convergeForward(Stream<Synapse<Neuron, Neuron>> stream) {
+        return Network.convergeForward(stream);
     }
 }

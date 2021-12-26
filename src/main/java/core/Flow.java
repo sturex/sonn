@@ -14,8 +14,12 @@ public enum Flow {
         return of(supplier.getAsBoolean());
     }
 
-    public static Flow converge(Stream<FlowSupplier> stream) {
-        return stream.anyMatch(f -> f.get() == Flow.RUN) ? Flow.RUN : Flow.STILL;
+    public static Flow convergeForward(Stream<? extends FlowSupplier> stream) {
+        return stream.anyMatch(f -> f.getForward() == Flow.RUN) ? Flow.RUN : Flow.STILL;
+    }
+
+    public static Flow convergeBackward(Stream<? extends FlowConsumer> stream) {
+        return stream.anyMatch(f -> f.getBackward() == Flow.RUN) ? Flow.STILL : Flow.RUN;
     }
 
     public void start(Runnable runnable) {

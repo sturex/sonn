@@ -4,7 +4,8 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
 
     private final T input;
     private final U output;
-    private Flow flow;
+    private Flow forwardFlow = Flow.STILL;
+    private Flow backwardFlow = Flow.STILL;
 
     public Edge(T input, U output) {
         this.input = input;
@@ -12,14 +13,24 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
     }
 
     @Override
-    public void accept(Flow flow) {
-        this.flow = flow;
+    public void acceptForward(Flow flow) {
+        forwardFlow = flow;
         output.collectInput();
     }
 
     @Override
-    public Flow get() {
-        return flow;
+    public void acceptBackward(Flow flow) {
+        backwardFlow = flow;
+        input.collectOutput();
     }
 
+    @Override
+    public Flow getForward() {
+        return backwardFlow;
+    }
+
+    @Override
+    public Flow getBackward() {
+        return forwardFlow;
+    }
 }

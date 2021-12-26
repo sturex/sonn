@@ -1,7 +1,7 @@
 package core;
 
-import java.util.function.Consumer;
+public interface FlowConsumer {
+    void acceptForward(Flow flow);
 
-public interface FlowConsumer extends Consumer<Flow> {
-
+    Flow getBackward();
 }
