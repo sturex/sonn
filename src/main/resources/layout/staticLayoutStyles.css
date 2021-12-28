@@ -1,6 +1,6 @@
 node {
     size-mode: dyn-size;
-    size: 0.4 gu;
+    size: 0.4gu;
     shape: circle;
     fill-color: blue;
     text-mode: normal;
@@ -59,25 +59,25 @@ node.output {
 }
 
 node.initial_negative {
-    size: 0.9 gu;
+    size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(255, 200, 200);
 }
 
 node.initial_positive {
-    size: 0.9 gu;
+    size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(200, 255, 200);
 }
 
 node.bypassed_negative {
-    size: 0.9 gu;
+    size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(255, 0, 0);
 }
 
 node.bypassed_positive {
-    size: 0.9 gu;
+    size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(0, 255, 0);
 }
