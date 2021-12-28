@@ -6,10 +6,24 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
     private final U output;
     private Flow forwardFlow = Flow.STILL;
     private Flow backwardFlow = Flow.STILL;
+    private static int idCounter = 0;
+    private final int id = idCounter++;
 
     public Edge(T input, U output) {
         this.input = input;
         this.output = output;
+    }
+
+    public T getInput() {
+        return input;
+    }
+
+    public U getOutput() {
+        return output;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

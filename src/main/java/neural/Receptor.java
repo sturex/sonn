@@ -1,25 +1,22 @@
 package neural;
 
-import core.Flow;
-import core.Node;
+import core.*;
 
+import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.stream.Stream;
 
-class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
+public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
 
-    Receptor(Network network, BooleanSupplier booleanSupplier) {
-        super(network);
-        addInput(new Reception(booleanSupplier));
+    protected Receptor(BooleanSupplier booleanSupplier) {
     }
 
     @Override
-    public Flow convergeForward(Stream<Reception> stream) {
-        return Flow.convergeForward(stream);
+    public Flow convergeForward(List<Reception> ts) {
+        return Flow.convergeForward(ts);
     }
 
     @Override
-    public Flow convergeBackward(Stream<Synapse<Receptor, Neuron>> stream) {
-        return Network.convergeBackward(stream);
+    public Flow convergeBackward(List<Synapse<Receptor, Neuron>> us) {
+        return Network.convergeBackward(us);
     }
 }

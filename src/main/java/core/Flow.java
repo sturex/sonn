@@ -1,5 +1,9 @@
 package core;
 
+import neural.Action;
+import neural.Reception;
+
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
@@ -14,12 +18,12 @@ public enum Flow {
         return of(supplier.getAsBoolean());
     }
 
-    public static Flow convergeForward(Stream<? extends FlowSupplier> stream) {
-        return stream.anyMatch(f -> f.getForward() == Flow.RUN) ? Flow.RUN : Flow.STILL;
+    public static Flow convergeForward(List<Reception> receptions) {
+        return receptions.stream().anyMatch(f -> f.getForward() == Flow.RUN) ? Flow.RUN : Flow.STILL;
     }
 
-    public static Flow convergeBackward(Stream<? extends FlowConsumer> stream) {
-        return stream.anyMatch(f -> f.getBackward() == Flow.RUN) ? Flow.STILL : Flow.RUN;
+    public static Flow convergeBackward(List<Action> actions) {
+        return actions.stream().anyMatch(f -> f.getBackward() == Flow.RUN) ? Flow.STILL : Flow.RUN;
     }
 
     public void start(Runnable runnable) {

@@ -3,21 +3,20 @@ package neural;
 import core.Flow;
 import core.Node;
 
-import java.util.stream.Stream;
+import java.util.List;
 
-class Neuron extends Node<Synapse<Neuron, Neuron>, Synapse<Neuron, Neuron>> {
+public class Neuron extends Node<Synapse<Node<?, ?>, Node<?, ?>>, Synapse<Node<?, ?>, Node<?, ?>>> {
 
     Neuron(Network network) {
-        super(network);
     }
 
     @Override
-    public Flow convergeBackward(Stream<Synapse<Neuron, Neuron>> stream) {
-        return Network.convergeBackward(stream);
+    public Flow convergeForward(List<Synapse<Node<?, ?>, Node<?, ?>>> ts) {
+        return Network.convergeForward(ts);
     }
 
     @Override
-    public Flow convergeForward(Stream<Synapse<Neuron, Neuron>> stream) {
-        return Network.convergeForward(stream);
+    public Flow convergeBackward(List<Synapse<Node<?, ?>, Node<?, ?>>> us) {
+        return Network.convergeBackward(us);
     }
 }

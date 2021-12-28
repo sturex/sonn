@@ -1,0 +1,84 @@
+node {
+    size-mode: dyn-size;
+    size: 0.4 gu;
+    shape: circle;
+    fill-color: blue;
+    text-mode: normal;
+    stroke-color: gray;
+    /*text-size: 14;*/
+    /*text-visibility-mode: normal;*/
+    text-visibility-mode: hidden;
+    text-background-color: white;
+    text-background-mode: rounded-box;
+    text-padding: 5px;
+}
+
+node.training_input {
+    stroke-color: red;
+    stroke-mode: plain;
+    padding: 1px;
+    shape: pie-chart;
+    fill-color: green, red, yellow;
+    text-mode: normal;
+}
+
+node.training_output {
+    stroke-color: red;
+    stroke-mode: plain;
+    padding: 1px;
+    shape: pie-chart;
+    fill-color: green, red, yellow;
+    text-mode: normal;
+}
+
+node.inner {
+    stroke-color: blue;
+    stroke-mode: none;
+    padding: 1px;
+    shape: pie-chart;
+    fill-color: green, red, yellow;
+    text-mode: normal;
+}
+
+node.input {
+    stroke-color: black;
+    stroke-mode: plain;
+    padding: 1px;
+    shape: pie-chart;
+    fill-color: green, red, yellow;
+    text-mode: normal;
+}
+
+node.output {
+    stroke-color: black;
+    stroke-mode: plain;
+    padding: 1px;
+    shape: pie-chart;
+    fill-color: green, red, yellow;
+    text-mode: normal;
+}
+
+node.initial_negative {
+    size: 0.9 gu;
+    shape: rounded-box;
+    fill-color: rgb(255, 200, 200);
+}
+
+node.initial_positive {
+    size: 0.9 gu;
+    shape: rounded-box;
+    fill-color: rgb(200, 255, 200);
+}
+
+node.bypassed_negative {
+    size: 0.9 gu;
+    shape: rounded-box;
+    fill-color: rgb(255, 0, 0);
+}
+
+node.bypassed_positive {
+    size: 0.9 gu;
+    shape: rounded-box;
+    fill-color: rgb(0, 255, 0);
+}
+

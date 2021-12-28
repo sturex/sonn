@@ -2,14 +2,14 @@ package neural;
 
 import core.*;
 
-class Synapse<T extends Node<? extends FlowSupplier, ? extends FlowConsumer>, U extends Node<? extends FlowSupplier, ? extends FlowConsumer>> extends Edge<T, U> {
+public class Synapse<T extends Node<?, ?>, U extends Node<?, ?>> extends Edge<T, U> implements FlowConsumer, FlowSupplier {
 
     Synapse(T input, U output, Type type) {
         super(input, output);
         this.type = type;
     }
 
-    public enum Type{
+    public enum Type {
         INHIBITORY, EXCITATORY
     }
 

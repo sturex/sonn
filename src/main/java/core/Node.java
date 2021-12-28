@@ -12,10 +12,11 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     private long collectedOutputCounter;
     private Flow forwardFlow = Flow.STILL;
     private Flow backwardFlow = Flow.STILL;
-    private final NodeEventListener nodeEventListener;
+    private static int idCounter = 0;
+    private final int id = idCounter++;
 
-    protected Node(NodeEventListener nodeEventListener) {
-        this.nodeEventListener = nodeEventListener;
+    public int getId() {
+        return id;
     }
 
     final void collectInput() {
@@ -30,15 +31,48 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         }
     }
 
+    public Stream<T> streamOfInputs() {
+        return inputs.stream();
+    }
+
+    public Stream<U> streamOfOutputs() {
+        return outputs.stream();
+    }
+
+    public boolean isStill() {
+        return forwardFlow == backwardFlow && forwardFlow == Flow.STILL;
+    }
+
+    public boolean isRun() {
+        return forwardFlow == backwardFlow && forwardFlow == Flow.RUN;
+    }
+
+    public boolean isDeadend() {
+        return forwardFlow == Flow.RUN && backwardFlow == Flow.STILL;
+    }
+
+    public boolean isSideway() {
+        return forwardFlow == Flow.STILL && backwardFlow == Flow.RUN;
+    }
+
     public final void triggerConverge() {
-        forwardFlow = convergeForward(inputs.stream());
+        forwardFlow = convergeForward(inputs);
         outputs.forEach(output -> output.acceptForward(forwardFlow));
     }
 
     public void triggerBackpass() {
-        backwardFlow = convergeBackward(outputs.stream());
-        Flow combinedFlow = nodeEventListener.onFlowsCrossed(this, forwardFlow, backwardFlow);
+        backwardFlow = convergeBackward(outputs);
+        Flow combinedFlow = combineFlows(forwardFlow, backwardFlow);
         inputs.forEach(input -> input.acceptBackward(combinedFlow));
+    }
+
+    private Flow combineFlows(Flow forwardFlow, Flow backwardFlow) {
+        if (forwardFlow == Flow.RUN && backwardFlow == Flow.STILL) {
+            return forwardFlow;
+        } else if (forwardFlow == Flow.STILL && backwardFlow == Flow.RUN) {
+            return backwardFlow;
+        }
+        return forwardFlow;
     }
 
     public final int inputSize() {
@@ -65,9 +99,9 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         return false;
     }
 
-    public abstract Flow convergeForward(Stream<T> stream);
+    public abstract Flow convergeForward(List<T> ts);
 
-    public abstract Flow convergeBackward(Stream<U> stream);
+    public abstract Flow convergeBackward(List<U> us);
 
     public final void addInput(T t) {
         assert !inputs.contains(t);

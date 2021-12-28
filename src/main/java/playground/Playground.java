@@ -1,18 +1,38 @@
 package playground;
 
+import core.Node;
 import neural.Network;
+import neural.NetworkEventsListener;
+import vis.GraphStreamStaticLayout;
+import vis.LayoutAdapter;
+import vis.NetworkLayout;
+
+import java.util.Random;
 
 public class Playground {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         Network network = new Network();
 
-        network.addReceptor(() -> true);
-        network.addEffector(() -> {});
+        network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
 
-        network.tick();
+        Random random = new Random();
 
+        network.addReceptor(random::nextBoolean);
+        network.addReceptor(random::nextBoolean);
+        network.addReceptor(random::nextBoolean);
+        network.addReceptor(random::nextBoolean);
+
+        network.addReflex(random::nextBoolean, () -> System.out.print(1));
+        network.addReflex(random::nextBoolean, () -> System.out.print(2));
+        network.addReflex(random::nextBoolean, () -> System.out.print(3));
+        network.addReflex(random::nextBoolean, () -> System.out.print(4));
+
+        for (int idx = 0; idx < 100; idx++) {
+            network.tick();
+            Thread.sleep(200);
+        }
     }
 
 }
