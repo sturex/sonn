@@ -47,4 +47,8 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
     public Flow getBackward() {
         return forwardFlow;
     }
+
+    public boolean isForwardRun() {
+        return forwardFlow == Flow.RUN;
+    }
 }

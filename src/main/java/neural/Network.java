@@ -69,9 +69,15 @@ public class Network {
 
     private void notifyListeners() {
         listeners.forEach(l -> {
-            receptors.forEach(l::onNodeStateChanged);
+            for (Receptor receptor : receptors) {
+                l.onNodeStateChanged(receptor);
+                receptor.streamOfOutputs().forEach(l::onSynapseStateChanged);
+            }
+            for (Neuron neuron : neurons) {
+                l.onNodeStateChanged(neuron);
+                neuron.streamOfOutputs().forEach(l::onSynapseStateChanged);
+            }
             effectors.forEach(l::onNodeStateChanged);
-            neurons.forEach(l::onNodeStateChanged);
         });
     }
 

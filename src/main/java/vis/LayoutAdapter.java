@@ -17,6 +17,13 @@ public class LayoutAdapter implements NetworkEventsListener {
     }
 
     @Override
+    public void onSynapseStateChanged(Synapse<?, ?> synapse) {
+        Node<?, ?> output = synapse.getOutput();
+        Node<?, ?> input = synapse.getInput();
+        layout.updateInnerNode(LayoutInnerNode.of(input, output), synapse.isForwardRun(), synapse.getType() == Synapse.Type.EXCITATORY);
+    }
+
+    @Override
     public void onReceptorAdded(Receptor receptor) {
         layout.addInputNode(LayoutInputNode.of(receptor));
     }
@@ -36,6 +43,6 @@ public class LayoutAdapter implements NetworkEventsListener {
     public void onSynapseAdded(Synapse<?, ?> synapse) {
         Node<?, ?> output = synapse.getOutput();
         Node<?, ?> input = synapse.getInput();
-        layout.addInnerNode(LayoutInnerNode.of(input, output));
+        layout.addInnerNode(LayoutInnerNode.of(input, output), synapse.getType() == Synapse.Type.EXCITATORY);
     }
 }

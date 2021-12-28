@@ -6,6 +6,8 @@ public interface NetworkEventsListener {
 
     void onNodeStateChanged(Node<?, ?> node);
 
+    void onSynapseStateChanged(Synapse<?, ?> synapse);
+
     void onReceptorAdded(Receptor receptor);
 
     void onEffectorAdded(Effector effector);

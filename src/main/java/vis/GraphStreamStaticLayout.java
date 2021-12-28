@@ -15,6 +15,10 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     public static final String INPUT = "input";
     public static final String OUTPUT = "output";
     public static final String INNER = "inner";
+    public static final String INITIAL_POSITIVE = "initial_positive";
+    public static final String INITIAL_NEGATIVE = "initial_negative";
+    public static final String BYPASSED_POSITIVE = "bypassed_positive";
+    public static final String BYPASSED_NEGATIVE = "bypassed_negative";
     private final SingleGraph graph;
     private static final int X_START = 0;
     private static final int Y_START = 0;
@@ -92,7 +96,7 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     }
 
     @Override
-    public void addInnerNode(LayoutInnerNode innerNode) {
+    public void addInnerNode(LayoutInnerNode innerNode, boolean isGreen) {
         org.graphstream.graph.Node verticalNode = graph.getNode(getVerticalNodeId(innerNode.getTargetId()));
         org.graphstream.graph.Node horizontalNode = graph.getNode(getHorizontalNodeId(innerNode.getSourceId()));
         Object[] xyzV = verticalNode.getAttribute("xyz", Object[].class);
@@ -100,11 +104,13 @@ public class GraphStreamStaticLayout implements NetworkLayout {
         org.graphstream.graph.Node node = addNode(new Coords((int) xyzH[0], (int) xyzV[1]),
                 getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId()), INNER);
         node.setAttribute("ui.label", node.getId());
+        node.setAttribute("ui.class", isGreen ? INITIAL_POSITIVE : INITIAL_NEGATIVE);
     }
 
     @Override
     public void updateNode(int id, boolean isEnlarged) {
         String nodeSize = isEnlarged ? "1.2gu" : "0.8gu";
+        //TODO either vertical or horizontal or both must be present - check it
         Optional.ofNullable(graph.getNode(getVerticalNodeId(id)))
                 .ifPresent(n -> n.setAttribute("ui.size", nodeSize));
         Optional.ofNullable(graph.getNode(getHorizontalNodeId(id)))
@@ -112,8 +118,25 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     }
 
     @Override
-    public void updateInnerNode() {
-
+    public void updateInnerNode(LayoutInnerNode innerNode, boolean isRun, boolean isGreen) {
+        String id = getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId());
+        String classAsNodeColor;
+        if (isRun) {
+            if (isGreen) {
+                classAsNodeColor = BYPASSED_POSITIVE;
+            } else {
+                classAsNodeColor = BYPASSED_NEGATIVE;
+            }
+        } else {
+            if (isGreen) {
+                classAsNodeColor = INITIAL_POSITIVE;
+            } else {
+                classAsNodeColor = INITIAL_NEGATIVE;
+            }
+        }
+        Optional.ofNullable(graph.getNode(id))
+                .orElseThrow(() -> new RuntimeException("Not found inner node with id: " + id))
+                .setAttribute("ui.class", classAsNodeColor);
     }
 
     private String getVerticalNodeId(int id) {
