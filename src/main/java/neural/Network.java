@@ -63,7 +63,16 @@ public class Network {
     public void tick() {
         forwardPass();
         backwardPass();
+        notifyListeners();
         createNewConnections();
+    }
+
+    private void notifyListeners() {
+        listeners.forEach(l -> {
+            receptors.forEach(l::onNodeStateChanged);
+            effectors.forEach(l::onNodeStateChanged);
+            neurons.forEach(l::onNodeStateChanged);
+        });
     }
 
     private Neuron addNeuron() {
@@ -100,6 +109,7 @@ public class Network {
         Synapse synapse = new Synapse<>(source, target, type);
         source.addOutput(synapse);
         target.addInput(synapse);
+        listeners.forEach(l -> l.onSynapseAdded(synapse));
     }
 
     private Stream<Node<?, ?>> streamOfDeadendNodes() {

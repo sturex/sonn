@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Optional;
 
 public class GraphStreamStaticLayout implements NetworkLayout {
 
@@ -94,18 +95,20 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     public void addInnerNode(LayoutInnerNode innerNode) {
         org.graphstream.graph.Node verticalNode = graph.getNode(getVerticalNodeId(innerNode.getTargetId()));
         org.graphstream.graph.Node horizontalNode = graph.getNode(getHorizontalNodeId(innerNode.getSourceId()));
-
-        int[] xyzV = verticalNode.getAttribute("xyz", int[].class);
-        int[] xyzH = horizontalNode.getAttribute("xyz", int[].class);
-
-        org.graphstream.graph.Node node = addNode(new Coords(xyzH[0], xyzV[1]),
+        Object[] xyzV = verticalNode.getAttribute("xyz", Object[].class);
+        Object[] xyzH = horizontalNode.getAttribute("xyz", Object[].class);
+        org.graphstream.graph.Node node = addNode(new Coords((int) xyzH[0], (int) xyzV[1]),
                 getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId()), INNER);
         node.setAttribute("ui.label", node.getId());
     }
 
     @Override
-    public void updateNode() {
-
+    public void updateNode(int id, boolean isEnlarged) {
+        String nodeSize = isEnlarged ? "1.2gu" : "0.8gu";
+        Optional.ofNullable(graph.getNode(getVerticalNodeId(id)))
+                .ifPresent(n -> n.setAttribute("ui.size", nodeSize));
+        Optional.ofNullable(graph.getNode(getHorizontalNodeId(id)))
+                .ifPresent(n -> n.setAttribute("ui.size", nodeSize));
     }
 
     @Override

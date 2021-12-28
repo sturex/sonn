@@ -8,6 +8,7 @@ import java.util.function.BooleanSupplier;
 public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
 
     protected Receptor(BooleanSupplier booleanSupplier) {
+        addInput(new Reception(booleanSupplier));
     }
 
     @Override

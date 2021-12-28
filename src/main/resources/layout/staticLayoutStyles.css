@@ -1,6 +1,6 @@
 node {
     size-mode: dyn-size;
-    size: 0.4gu;
+    size: 0.8gu;
     shape: circle;
     fill-color: blue;
     text-mode: normal;

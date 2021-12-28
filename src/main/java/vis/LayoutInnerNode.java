@@ -9,6 +9,16 @@ public interface LayoutInnerNode {
     int getTargetId();
 
     static LayoutInnerNode of(Node<?, ?> input, Node<?, ?> output) {
-        return null;
+        return new LayoutInnerNode() {
+            @Override
+            public int getSourceId() {
+                return input.getId();
+            }
+
+            @Override
+            public int getTargetId() {
+                return output.getId();
+            }
+        };
     }
 }

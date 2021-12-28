@@ -39,6 +39,10 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         return outputs.stream();
     }
 
+    public boolean isForwardRun() {
+        return forwardFlow == Flow.RUN;
+    }
+
     public boolean isStill() {
         return forwardFlow == backwardFlow && forwardFlow == Flow.STILL;
     }

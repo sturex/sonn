@@ -1,7 +1,10 @@
 package neural;
 
+import core.Node;
+
 public interface NetworkEventsListener {
 
+    void onNodeStateChanged(Node<?, ?> node);
 
     void onReceptorAdded(Receptor receptor);
 
