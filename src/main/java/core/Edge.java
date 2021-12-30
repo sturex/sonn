@@ -40,12 +40,12 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
 
     @Override
     public Flow getForward() {
-        return backwardFlow;
+        return forwardFlow;
     }
 
     @Override
     public Flow getBackward() {
-        return forwardFlow;
+        return backwardFlow;
     }
 
     public boolean isForwardRun() {

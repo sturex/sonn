@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Network {
@@ -15,8 +16,10 @@ public class Network {
     private final List<Effector> effectors = new ArrayList<>();
     private final List<Neuron> neurons = new ArrayList<>();
     private final List<NetworkEventsListener> listeners = new ArrayList<>();
+    Neuron targetNeuron = null;
 
     static Flow convergeForward(List<? extends Synapse<?, ?>> synapses) {
+        assert !synapses.isEmpty();
         if (synapses.stream().anyMatch(s -> s.getForward() == Flow.RUN && s.getType() == Synapse.Type.INHIBITORY)) {
             return Flow.STILL;
         } else if (synapses.stream().anyMatch(s -> s.getForward() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
@@ -28,8 +31,6 @@ public class Network {
 
     static Flow convergeBackward(List<? extends Synapse<?, ?>> synapses) {
         if (synapses.stream().anyMatch(s -> s.getBackward() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
-            return Flow.STILL;
-        } else if (synapses.stream().anyMatch(s -> s.getBackward() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
             return Flow.RUN;
         } else {
             return Flow.STILL;
@@ -48,7 +49,7 @@ public class Network {
     }
 
     public Effector addEffector(Runnable runnable) {
-        Effector effector = new Effector(this, Objects.requireNonNull(runnable));
+        Effector effector = new Effector(Objects.requireNonNull(runnable));
         effectors.add(effector);
         listeners.forEach(l -> l.onEffectorAdded(effector));
         return effector;
@@ -70,34 +71,27 @@ public class Network {
     private void notifyListeners() {
         listeners.forEach(l -> {
             for (Receptor receptor : receptors) {
-                l.onNodeStateChanged(receptor);
+                l.onReceptorStateChanged(receptor);
                 receptor.streamOfOutputs().forEach(l::onSynapseStateChanged);
             }
             for (Neuron neuron : neurons) {
-                l.onNodeStateChanged(neuron);
+                l.onNeuronStateChanged(neuron);
                 neuron.streamOfOutputs().forEach(l::onSynapseStateChanged);
             }
-            effectors.forEach(l::onNodeStateChanged);
+            effectors.forEach(l::onEffectorStateChanged);
         });
     }
 
     private Neuron addNeuron() {
-        Neuron neuron = new Neuron(this);
+        Neuron neuron = new Neuron();
         neurons.add(neuron);
         listeners.forEach(l -> l.onNeuronAdded(neuron));
         return neuron;
     }
 
-    private Optional<Neuron> requestTargetNeuron() {
-        if (true) {
-            return Optional.of(addNeuron());
-        } else {
-            return Optional.empty();
-        }
-    }
-
     private void backwardPass() {
         effectors.forEach(Node::triggerBackpass);
+        Optional.ofNullable(targetNeuron).ifPresent(Node::triggerBackpass);
     }
 
     private void forwardPass() {
@@ -105,28 +99,35 @@ public class Network {
     }
 
     private void createNewConnections() {
-        requestTargetNeuron().ifPresent(neuron -> {
-            streamOfDeadendNodes().forEach(node -> connect(node, neuron, Synapse.Type.EXCITATORY));
-            streamOfSidewayNodes().forEach(node -> connect(node, neuron, Synapse.Type.INHIBITORY));
-        });
+        if (true) {
+            List<? extends Node<?, ?>> deadendNodes = findDeadendNodes();
+            List<? extends Node<?, ?>> sidewayNodes = findSidewayNodes();
+
+            assert !deadendNodes.isEmpty() || sidewayNodes.isEmpty();
+
+            targetNeuron = addNeuron();
+            deadendNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.EXCITATORY));
+            sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
+        }
     }
 
     private void connect(Node source, Node target, Synapse.Type type) {
+        assert !source.equals(target);
         Synapse synapse = new Synapse<>(source, target, type);
         source.addOutput(synapse);
         target.addInput(synapse);
         listeners.forEach(l -> l.onSynapseAdded(synapse));
     }
 
-    private Stream<Node<?, ?>> streamOfDeadendNodes() {
-        return Stream.of(receptors.stream().filter(Node::isDeadend), neurons.stream().filter(Node::isDeadend)).flatMap(i -> i);
+    private List<? extends Node<?, ?>> findDeadendNodes() {
+        return Stream.of(receptors.stream().filter(Node::isDeadend), neurons.stream().filter(Node::isDeadend)).flatMap(i -> i).collect(Collectors.toList());
     }
 
-    private Stream<Node<?, ?>> streamOfRunEffectors() {
-        return Stream.of(effectors.stream().filter(Node::isRun)).flatMap(i -> i);
+    private List<Effector> findRunEffectors() {
+        return Stream.of(effectors.stream().filter(Node::isRun)).flatMap(i -> i).collect(Collectors.toList());
     }
 
-    private Stream<Node<?, ?>> streamOfSidewayNodes() {
-        return Stream.of(receptors.stream().filter(Node::isSideway), neurons.stream().filter(Node::isSideway)).flatMap(i -> i);
+    private List<? extends Node<?, ?>> findSidewayNodes() {
+        return Stream.of(receptors.stream().filter(Node::isSideway), neurons.stream().filter(Node::isSideway)).flatMap(i -> i).collect(Collectors.toList());
     }
 }

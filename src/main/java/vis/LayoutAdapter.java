@@ -12,8 +12,19 @@ public class LayoutAdapter implements NetworkEventsListener {
     }
 
     @Override
-    public void onNodeStateChanged(Node<?, ?> node) {
-        layout.updateNode(node.getId(), node.isForwardRun());
+    public void onReceptorStateChanged(Receptor receptor) {
+        layout.updateInputNode(LayoutInputNode.of(receptor), receptor.isForwardRun());
+    }
+
+    @Override
+    public void onEffectorStateChanged(Effector effector) {
+        layout.updateOutputNode(LayoutOutputNode.of(effector), effector.isForwardRun());
+    }
+
+    @Override
+    public void onNeuronStateChanged(Neuron neuron) {
+        layout.updateInputNode(LayoutInputNode.of(neuron), neuron.isForwardRun());
+        layout.updateOutputNode(LayoutOutputNode.of(neuron), neuron.isForwardRun());
     }
 
     @Override

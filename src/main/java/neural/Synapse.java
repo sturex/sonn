@@ -19,4 +19,8 @@ public class Synapse<T extends Node<?, ?>, U extends Node<?, ?>> extends Edge<T,
 
     private final Type type;
 
+    @Override
+    public String toString() {
+        return "S" + getId() + " (" + type + ")";
+    }
 }

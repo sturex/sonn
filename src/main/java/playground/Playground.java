@@ -23,13 +23,13 @@ public class Playground {
         network.addReceptor(random::nextBoolean);
         network.addReceptor(random::nextBoolean);
         network.addReceptor(random::nextBoolean);
+//
+//        network.addReflex(random::nextBoolean, () -> System.out.print(1));
+//        network.addReflex(random::nextBoolean, () -> System.out.print(2));
+//        network.addReflex(random::nextBoolean, () -> System.out.print(3));
+//        network.addReflex(random::nextBoolean, () -> System.out.print(4));
 
-        network.addReflex(random::nextBoolean, () -> System.out.print(1));
-        network.addReflex(random::nextBoolean, () -> System.out.print(2));
-        network.addReflex(random::nextBoolean, () -> System.out.print(3));
-        network.addReflex(random::nextBoolean, () -> System.out.print(4));
-
-        for (int idx = 0; idx < 100; idx++) {
+        for (int idx = 0; idx < 200; idx++) {
             network.tick();
             Thread.sleep(200);
         }

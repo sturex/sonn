@@ -23,7 +23,7 @@ public enum Flow {
     }
 
     public static Flow convergeBackward(List<Action> actions) {
-        return actions.stream().anyMatch(f -> f.getBackward() == Flow.RUN) ? Flow.STILL : Flow.RUN;
+        return actions.stream().anyMatch(f -> f.getBackward() == Flow.RUN) ? Flow.RUN : Flow.STILL;
     }
 
     public void start(Runnable runnable) {

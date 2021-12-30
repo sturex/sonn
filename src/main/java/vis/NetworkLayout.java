@@ -8,8 +8,9 @@ public interface NetworkLayout {
 
     void addInnerNode(LayoutInnerNode innerNode, boolean isGreen);
 
-    void updateNode(int id, boolean isEnlarged);
-
     void updateInnerNode(LayoutInnerNode innerNode, boolean isRun, boolean isGreen);
 
+    void updateInputNode(LayoutInputNode inputNode, boolean isEnlarged);
+
+    void updateOutputNode(LayoutOutputNode outputNode, boolean isEnlarged);
 }

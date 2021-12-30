@@ -4,15 +4,19 @@ import core.Node;
 
 public interface NetworkEventsListener {
 
-    void onNodeStateChanged(Node<?, ?> node);
+    default void onReceptorStateChanged(Receptor receptor){}
 
-    void onSynapseStateChanged(Synapse<?, ?> synapse);
+    default void onEffectorStateChanged(Effector effector){}
 
-    void onReceptorAdded(Receptor receptor);
+    default void onNeuronStateChanged(Neuron neuron){}
 
-    void onEffectorAdded(Effector effector);
+    default void onSynapseStateChanged(Synapse<?, ?> synapse){}
 
-    void onNeuronAdded(Neuron neuron);
+    default void onReceptorAdded(Receptor receptor){}
 
-    void onSynapseAdded(Synapse<?, ?> synapse);
+    default void onEffectorAdded(Effector effector){}
+
+    default void onNeuronAdded(Neuron neuron){}
+
+    default void onSynapseAdded(Synapse<?, ?> synapse){}
 }

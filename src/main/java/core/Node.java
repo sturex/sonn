@@ -52,7 +52,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     public boolean isDeadend() {
-        return forwardFlow == Flow.RUN && backwardFlow == Flow.STILL;
+        return (forwardFlow == Flow.RUN && backwardFlow == Flow.STILL) || outputSize() == 0;
     }
 
     public boolean isSideway() {
@@ -66,8 +66,8 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
     public void triggerBackpass() {
         backwardFlow = convergeBackward(outputs);
-        Flow combinedFlow = combineFlows(forwardFlow, backwardFlow);
-        inputs.forEach(input -> input.acceptBackward(combinedFlow));
+        //Flow combinedFlow = combineFlows(forwardFlow, backwardFlow);
+        inputs.forEach(input -> input.acceptBackward(forwardFlow));
     }
 
     private Flow combineFlows(Flow forwardFlow, Flow backwardFlow) {
@@ -88,7 +88,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     private boolean everyInputCollected() {
-        if (collectedInputCounter++ == inputs.size()) {
+        if (++collectedInputCounter == inputs.size()) {
             collectedInputCounter = 0;
             return true;
         }
@@ -96,7 +96,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     private boolean everyOutputCollected() {
-        if (collectedOutputCounter++ == outputs.size()) {
+        if (++collectedOutputCounter == outputs.size()) {
             collectedOutputCounter = 0;
             return true;
         }
@@ -115,5 +115,18 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     public final void addOutput(U u) {
         assert !outputs.contains(u);
         outputs.add(u);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Node node) {
+            return id == node.getId();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

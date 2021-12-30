@@ -20,4 +20,9 @@ public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
     public Flow convergeBackward(List<Synapse<Receptor, Neuron>> us) {
         return Network.convergeBackward(us);
     }
+
+    @Override
+    public String toString() {
+        return "R" + getId();
+    }
 }

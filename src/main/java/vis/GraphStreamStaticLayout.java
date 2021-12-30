@@ -55,10 +55,10 @@ public class GraphStreamStaticLayout implements NetworkLayout {
         org.graphstream.graph.Node node = addNode(new Coords(++horizontalCount, Y_START),
                 getHorizontalNodeId(inputNode.getId()), INPUT);
         node.setAttribute("ui.label", node.getId());
-        updateHorizontalNode(inputNode);
+        updateHorizontalNode(inputNode, false);
     }
 
-    private void updateHorizontalNode(LayoutInputNode inputNode) {
+    private void updateHorizontalNode(LayoutInputNode inputNode, boolean isEnlarged) {
         org.graphstream.graph.Node graphNode = graph.getNode(getHorizontalNodeId(inputNode.getId()));
         if (inputNode.getTotalOutputs() == 0) {
             graphNode.setAttribute("ui.pie-values", 0, 0, 1);
@@ -67,6 +67,7 @@ public class GraphStreamStaticLayout implements NetworkLayout {
                     (double) inputNode.getPositiveOutputs() / inputNode.getTotalOutputs(),
                     (double) inputNode.getNegativeOutputs() / inputNode.getTotalOutputs(), 0.0);
         }
+        graphNode.setAttribute("ui.size", isEnlarged ? "1.2gu" : "0.8gu");
     }
 
     private org.graphstream.graph.Node addNode(Coords coords, String nodeId, String nodeType) {
@@ -81,10 +82,10 @@ public class GraphStreamStaticLayout implements NetworkLayout {
         org.graphstream.graph.Node node = addNode(new Coords(X_START, ++verticalCount),
                 getVerticalNodeId(outputNode.getId()), OUTPUT);
         node.setAttribute("ui.label", node.getId());
-        updateVerticalNode(outputNode);
+        updateVerticalNode(outputNode, false);
     }
 
-    private void updateVerticalNode(LayoutOutputNode outputNode) {
+    private void updateVerticalNode(LayoutOutputNode outputNode, boolean isEnlarged) {
         org.graphstream.graph.Node graphNode = graph.getNode(getVerticalNodeId(outputNode.getId()));
         if (outputNode.getTotalInputs() == 0) {
             graphNode.setAttribute("ui.pie-values", 0, 0, 1);
@@ -93,6 +94,7 @@ public class GraphStreamStaticLayout implements NetworkLayout {
                     (double) outputNode.getPositiveInputs() / outputNode.getTotalInputs(),
                     (double) outputNode.getNegativeInputs() / outputNode.getTotalInputs(), 0.0);
         }
+        graphNode.setAttribute("ui.size", isEnlarged ? "1.2gu" : "0.8gu");
     }
 
     @Override
@@ -105,16 +107,6 @@ public class GraphStreamStaticLayout implements NetworkLayout {
                 getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId()), INNER);
         node.setAttribute("ui.label", node.getId());
         node.setAttribute("ui.class", isGreen ? INITIAL_POSITIVE : INITIAL_NEGATIVE);
-    }
-
-    @Override
-    public void updateNode(int id, boolean isEnlarged) {
-        String nodeSize = isEnlarged ? "1.2gu" : "0.8gu";
-        //TODO either vertical or horizontal or both must be present - check it
-        Optional.ofNullable(graph.getNode(getVerticalNodeId(id)))
-                .ifPresent(n -> n.setAttribute("ui.size", nodeSize));
-        Optional.ofNullable(graph.getNode(getHorizontalNodeId(id)))
-                .ifPresent(n -> n.setAttribute("ui.size", nodeSize));
     }
 
     @Override
@@ -137,6 +129,16 @@ public class GraphStreamStaticLayout implements NetworkLayout {
         Optional.ofNullable(graph.getNode(id))
                 .orElseThrow(() -> new RuntimeException("Not found inner node with id: " + id))
                 .setAttribute("ui.class", classAsNodeColor);
+    }
+
+    @Override
+    public void updateInputNode(LayoutInputNode inputNode, boolean isEnlarged) {
+        updateHorizontalNode(inputNode, isEnlarged);
+    }
+
+    @Override
+    public void updateOutputNode(LayoutOutputNode outputNode, boolean isEnlarged) {
+        updateVerticalNode(outputNode, isEnlarged);
     }
 
     private String getVerticalNodeId(int id) {

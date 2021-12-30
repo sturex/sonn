@@ -7,10 +7,7 @@ import java.util.List;
 
 public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
 
-    private final Network network;
-
-    Effector(Network network, Runnable runnable) {
-        this.network = network;
+    Effector(Runnable runnable) {
         addOutput(new Action(runnable));
     }
 
@@ -22,5 +19,10 @@ public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
     @Override
     public Flow convergeBackward(List<Action> us) {
         return Flow.convergeBackward(us);
+    }
+
+    @Override
+    public String toString() {
+        return "E" + getId();
     }
 }
