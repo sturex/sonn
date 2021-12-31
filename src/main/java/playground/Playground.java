@@ -7,6 +7,8 @@ import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 import vis.NetworkLayout;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Random;
 
 public class Playground {
@@ -17,17 +19,19 @@ public class Playground {
 
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
 
-        Random random = new Random();
+        Queue<Boolean> queue = new ArrayDeque<>();
+        queue.add(true);
+        queue.add(false);
+        queue.add(true);
+        queue.add(true);
+        queue.add(false);
+        queue.add(true);
 
-        network.addReceptor(random::nextBoolean);
-        network.addReceptor(random::nextBoolean);
-        network.addReceptor(random::nextBoolean);
-        network.addReceptor(random::nextBoolean);
-//
-//        network.addReflex(random::nextBoolean, () -> System.out.print(1));
-//        network.addReflex(random::nextBoolean, () -> System.out.print(2));
-//        network.addReflex(random::nextBoolean, () -> System.out.print(3));
-//        network.addReflex(random::nextBoolean, () -> System.out.print(4));
+        network.addReceptor(queue::poll);
+
+        while (!queue.isEmpty()){
+            network.tick();
+        }
 
         for (int idx = 0; idx < 200; idx++) {
             network.tick();

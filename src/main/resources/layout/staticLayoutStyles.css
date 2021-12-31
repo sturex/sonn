@@ -5,9 +5,9 @@ node {
     fill-color: blue;
     text-mode: normal;
     stroke-color: gray;
-    /*text-size: 14;*/
-    /*text-visibility-mode: normal;*/
-    text-visibility-mode: hidden;
+    text-size: 14;
+    text-visibility-mode: normal;
+    /*text-visibility-mode: hidden;*/
     text-background-color: white;
     text-background-mode: rounded-box;
     text-padding: 5px;
