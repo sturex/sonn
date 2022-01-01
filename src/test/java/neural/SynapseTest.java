@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Synapse tests")
 class SynapseTest {
 
+
     @Test
     @DisplayName("Synapse correctly accepts forward flow")
     void forwardFlowExcSynapseTest() {

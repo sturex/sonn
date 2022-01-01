@@ -106,17 +106,23 @@ public class Network {
             assert !deadendNodes.isEmpty() || sidewayNodes.isEmpty();
 
             targetNeuron = addNeuron();
-            deadendNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.EXCITATORY));
-            sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
+            deadendNodes.forEach(d -> {
+                Synapse synapse = connect(d, targetNeuron, Synapse.Type.EXCITATORY);
+                listeners.forEach(l -> l.onSynapseAdded(synapse));
+            });
+            sidewayNodes.forEach(d -> {
+                Synapse synapse = connect(d, targetNeuron, Synapse.Type.INHIBITORY);
+                listeners.forEach(l -> l.onSynapseAdded(synapse));
+            });
         }
     }
 
-    private void connect(Node source, Node target, Synapse.Type type) {
+    public static Synapse connect(Node source, Node target, Synapse.Type type) {
         assert !source.equals(target);
         Synapse synapse = new Synapse<>(source, target, type);
         source.addOutput(synapse);
         target.addInput(synapse);
-        listeners.forEach(l -> l.onSynapseAdded(synapse));
+        return synapse;
     }
 
     private List<? extends Node<?, ?>> findDeadendNodes() {

@@ -19,6 +19,14 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         return id;
     }
 
+    public Flow getForwardFlow() {
+        return forwardFlow;
+    }
+
+    public Flow getBackwardFlow() {
+        return backwardFlow;
+    }
+
     final void collectInput() {
         if (everyInputCollected()) {
             triggerConverge();

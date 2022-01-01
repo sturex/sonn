@@ -1,17 +1,50 @@
 package neural;
 
+import core.Flow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @DisplayName("Testing grow of the network on certain input flows")
 class NetworkTest {
 
+    private int target = 0;
+    private final BooleanSupplier trueSupplier = () -> true;
+    private final BooleanSupplier falseSupplier = () -> false;
+
     @Test
-    @DisplayName("It grows correctly with single receptor and no effectors")
+    @DisplayName("Primitive R-E chain with inhibitory synapse blocks input RUN flow")
+    void chainWithInhibitorySynapseTest() {
+        int expectedValue = 100;
+        Receptor receptor = new Receptor(trueSupplier);
+        Effector effector = new Effector(() -> target = expectedValue);
+        Network.connect(receptor, effector, Synapse.Type.INHIBITORY);
+        receptor.triggerConverge();
+        assertEquals(Flow.RUN, receptor.getForwardFlow());
+        assertEquals(Flow.STILL, effector.getForwardFlow());
+        assertNotEquals(expectedValue, target);
+    }
+
+    @Test
+    @DisplayName("Primitive R-E chain with excitatory synapse correctly transforms input RUN flow to output action")
+    void chainWithExcitatorySynapseTest() {
+        int expectedValue = 100;
+        Receptor receptor = new Receptor(trueSupplier);
+        Effector effector = new Effector(() -> target = expectedValue);
+        Network.connect(receptor, effector, Synapse.Type.EXCITATORY);
+        receptor.triggerConverge();
+        assertEquals(Flow.RUN, receptor.getForwardFlow());
+        assertEquals(Flow.RUN, effector.getForwardFlow());
+        assertEquals(expectedValue, target);
+    }
+
+    @Test
+    @DisplayName("Network grows correctly on predefined flow with single receptor and no effectors")
     void singleReceptorTest() {
         Network network = new Network();
 
@@ -33,7 +66,7 @@ class NetworkTest {
 
         network.addReceptor(queue::poll);
 
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             network.tick();
         }
 
