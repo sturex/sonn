@@ -31,10 +31,6 @@ public class Playground {
 
         while (!queue.isEmpty()){
             network.tick();
-        }
-
-        for (int idx = 0; idx < 200; idx++) {
-            network.tick();
             Thread.sleep(200);
         }
     }

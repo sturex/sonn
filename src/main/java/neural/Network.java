@@ -99,13 +99,10 @@ public class Network {
     }
 
     private void createNewConnections() {
-        if (true) {
-            List<? extends Node<?, ?>> deadendNodes = findDeadendNodes();
-            List<? extends Node<?, ?>> sidewayNodes = findSidewayNodes();
-
-            assert !deadendNodes.isEmpty() || sidewayNodes.isEmpty();
-
+        List<? extends Node<?, ?>> deadendNodes = findDeadendNodes();
+        if (!deadendNodes.isEmpty()) {
             targetNeuron = addNeuron();
+            List<? extends Node<?, ?>> sidewayNodes = findSidewayNodes();
             deadendNodes.forEach(d -> {
                 Synapse synapse = connect(d, targetNeuron, Synapse.Type.EXCITATORY);
                 listeners.forEach(l -> l.onSynapseAdded(synapse));
