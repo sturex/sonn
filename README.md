@@ -1,5 +1,7 @@
 # Self-organizing AI (RL)
-_Here will be wider abstract soon, hold tight_
+This is Java lab for developing and experimenting with brand-new AI technology.
+The technology is fully my own and hadn't been published anywhere.
+Core code is non-commercial for now and will always be non-commercial in future while commercial product based on it are feasible.
 
 # ✨ Priceless thousand Source Lines of code ✨
 
@@ -28,3 +30,34 @@ Proof-of-concept, Single-threaded and Non-optimized.
 It has visualization now!
 
 ![Alt text](src/main/resources/git/scr1.jpg?raw=true "Title")
+
+## How to start with it
+
+- Clone the project. Open it in your favorite IDE.
+- Start exploring [Playground package](https://github.com/sturex/sonn/tree/master/src/main/java/playground).
+- or create your own class with main method with contents as below
+
+
+
+``` java
+Random random = new Random();
+Network network = new Network();
+
+network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
+
+network.addReceptor(random::nextBoolean);
+network.addReceptor(random::nextBoolean);
+network.addReceptor(random::nextBoolean);
+network.addReceptor(random::nextBoolean);
+
+for (int idx = 0; idx < 20; idx++) {
+    network.tick();
+    Thread.sleep(50);
+}
+```
+
+## Near or far future steps
+After polishing the core I will also add rwa (Real-World Applications) package with some approaches to common AI problems
+- [Anomaly detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**
+- Pattern recognition on **multivariate time-series** data with **noise**
+- True [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) based approach to training unmanned vehicles, [UAV](https://en.wikipedia.org/wiki/Unmanned_aerial_vehicle) or [UGV](https://en.wikipedia.org/wiki/Unmanned_ground_vehicle) etc.
