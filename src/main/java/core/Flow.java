@@ -31,4 +31,8 @@ public enum Flow {
             runnable.run();
         }
     }
+
+    public Flow inverted(){
+        return this == RUN ? STILL : RUN;
+    }
 }
