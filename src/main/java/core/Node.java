@@ -60,7 +60,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     public boolean isDeadend() {
-        return (forwardFlow == Flow.RUN && backwardFlow == Flow.STILL) || outputSize() == 0;
+        return forwardFlow == Flow.RUN && backwardFlow == Flow.STILL;
     }
 
     public boolean isSideway() {
