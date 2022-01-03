@@ -23,6 +23,6 @@ public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
 
     @Override
     public String toString() {
-        return "R" + getId();
+        return "R" + super.toString();
     }
 }

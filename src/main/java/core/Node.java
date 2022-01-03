@@ -137,4 +137,9 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     public int hashCode() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return id + ": " + forwardFlow.toString() + "-" + backwardFlow.toString();
+    }
 }

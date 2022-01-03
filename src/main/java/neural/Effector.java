@@ -23,6 +23,6 @@ public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
 
     @Override
     public String toString() {
-        return "E" + getId();
+        return "E" + super.toString();
     }
 }

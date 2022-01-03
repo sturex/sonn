@@ -19,6 +19,6 @@ public class Neuron extends Node<Synapse<Node<?, ?>, Node<?, ?>>, Synapse<Node<?
 
     @Override
     public String toString() {
-        return "N" + getId();
+        return "N" + super.toString();
     }
 }
