@@ -14,6 +14,14 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
         this.output = output;
     }
 
+    public void setForwardFlow(Flow forwardFlow) {
+        this.forwardFlow = Objects.requireNonNull(forwardFlow);
+    }
+
+    public void setBackwardFlow(Flow backwardFlow) {
+        this.backwardFlow = Objects.requireNonNull(backwardFlow);
+    }
+
     public T getInput() {
         return input;
     }
