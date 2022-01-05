@@ -74,7 +74,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
     public void triggerBackpass() {
         backwardFlow = convergeBackward(outputs);
-        inputs.forEach(input -> input.acceptBackward(backwardFlow));
+        inputs.forEach(input -> input.acceptBackward(forwardFlow));
     }
 
     public final int inputSize() {
