@@ -1,5 +1,7 @@
 package core;
 
+import java.util.Objects;
+
 public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends FlowConsumer>, U extends Node<? extends FlowSupplier, ? extends FlowConsumer>> implements FlowSupplier, FlowConsumer {
 
     private final T input;
