@@ -21,6 +21,6 @@ public class Synapse<T extends Node<?, ?>, U extends Node<?, ?>> extends Edge<T,
 
     @Override
     public String toString() {
-        return "S" + getId() + " (" + type + ")";
+        return "S" + getId() + "-" + type.toString().charAt(0) + " (" + getForward() + "-" + getBackward() + "): " + getInput() + " -> " + getOutput();
     }
 }

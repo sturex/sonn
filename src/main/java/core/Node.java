@@ -130,6 +130,6 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
     @Override
     public String toString() {
-        return id + ": " + forwardFlow.toString() + "-" + backwardFlow.toString();
+        return id + " (" + forwardFlow + "-" + backwardFlow + ")";
     }
 }
