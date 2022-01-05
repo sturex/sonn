@@ -77,6 +77,7 @@ public class Network {
         backwardPass();
         notifyListeners();
         createNewConnections();
+        increaseTimestamp();
     }
 
     private void notifyListeners() {
