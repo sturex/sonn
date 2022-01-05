@@ -17,7 +17,6 @@ public class Network {
     private final List<Neuron> neurons = new ArrayList<>();
     private final List<NetworkEventsListener> listeners = new ArrayList<>();
     private int timestamp = 0;
-
     Neuron targetNeuron = null;
 
     static Flow convergeForward(List<? extends Synapse<?, ?>> synapses) {
@@ -103,7 +102,7 @@ public class Network {
 
     private void backwardPass() {
         effectors.forEach(Node::triggerBackpass);
-        Optional.ofNullable(targetNeuron).ifPresent(Node::triggerBackpass);
+        Optional.ofNullable(targetNeuron).ifPresentOrElse(Node::triggerBackpass, () -> receptors.forEach(Node::triggerBackpass));
     }
 
     private void forwardPass() {
@@ -135,7 +134,14 @@ public class Network {
     }
 
     private List<? extends Node<?, ?>> findDeadendNodes() {
-        return Stream.of(receptors.stream().filter(Node::isDeadend), neurons.stream().filter(Node::isDeadend)).flatMap(i -> i).collect(Collectors.toList());
+        List<Node<?, ?>> nodes = Stream.of(receptors.stream().filter(Node::isDeadend), neurons.stream().filter(Node::isDeadend)).flatMap(i -> i).collect(Collectors.toList());
+        Optional.ofNullable(targetNeuron).ifPresent(e -> {
+            if (!nodes.contains(e)) {
+                nodes.add(e);
+            }
+        });
+//        Optional.ofNullable(targetNeuron).ifPresent(nodes::add);
+        return nodes;
     }
 
     private List<Effector> findRunEffectors() {
