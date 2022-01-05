@@ -30,6 +30,7 @@ public class Network {
     }
 
     static Flow convergeBackward(List<? extends Synapse<?, ?>> synapses) {
+        assert synapses.isEmpty() || synapses.stream().anyMatch(s -> s.getType() == Synapse.Type.EXCITATORY);
         if (synapses.stream().anyMatch(s -> s.getBackward() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
             return Flow.RUN;
         } else {
