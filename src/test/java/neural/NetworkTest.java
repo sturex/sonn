@@ -9,8 +9,7 @@ import vis.LayoutAdapter;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Testing grow of the network on certain input flows")
 class NetworkTest {
@@ -51,10 +50,50 @@ class NetworkTest {
         Network network = new Network();
 
         List<Synapse<?, ?>> synapses = new ArrayList<>();
-
+        List<Neuron> neurons = new ArrayList<>();
         network.addListener(new NetworkEventsListener() {
+
+            @Override
+            public void onReceptorStateChanged(Receptor receptor) {
+                NetworkEventsListener.super.onReceptorStateChanged(receptor);
+            }
+
+            @Override
+            public void onEffectorStateChanged(Effector effector) {
+                NetworkEventsListener.super.onEffectorStateChanged(effector);
+            }
+
+            @Override
+            public void onNeuronStateChanged(Neuron neuron) {
+                NetworkEventsListener.super.onNeuronStateChanged(neuron);
+            }
+
+            @Override
+            public void onSynapseStateChanged(Synapse<?, ?> synapse) {
+                NetworkEventsListener.super.onSynapseStateChanged(synapse);
+            }
+
+            @Override
+            public void onReceptorAdded(Receptor receptor) {
+                assertEquals(0, receptor.getId());
+                assertEquals(Flow.STILL, receptor.getBackwardFlow());
+                assertEquals(Flow.STILL, receptor.getForwardFlow());
+            }
+
+            @Override
+            public void onEffectorAdded(Effector effector) {
+                fail();
+            }
+
+            @Override
+            public void onNeuronAdded(Neuron neuron) {
+                neurons.add(neuron);
+            }
+
             @Override
             public void onSynapseAdded(Synapse<?, ?> synapse) {
+                assertEquals(Flow.RUN, synapse.getBackward());
+                assertEquals(Flow.STILL, synapse.getForward());
                 synapses.add(synapse);
             }
         });
@@ -84,5 +123,7 @@ class NetworkTest {
         assertEquals(Synapse.Type.EXCITATORY, synapses.get(7).getType());
         assertEquals(Synapse.Type.EXCITATORY, synapses.get(8).getType());
         assertEquals(Synapse.Type.EXCITATORY, synapses.get(9).getType());
+
+        assertEquals(6, neurons.size());
     }
 }
