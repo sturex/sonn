@@ -16,6 +16,8 @@ public class Network {
     private final List<Effector> effectors = new ArrayList<>();
     private final List<Neuron> neurons = new ArrayList<>();
     private final List<NetworkEventsListener> listeners = new ArrayList<>();
+    private int timestamp = 0;
+
     Neuron targetNeuron = null;
 
     static Flow convergeForward(List<? extends Synapse<?, ?>> synapses) {
@@ -36,6 +38,14 @@ public class Network {
         } else {
             return Flow.STILL;
         }
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public void increaseTimestamp(){
+        timestamp++;
     }
 
     public void addListener(NetworkEventsListener listener) {
