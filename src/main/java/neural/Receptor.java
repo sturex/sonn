@@ -1,13 +1,15 @@
 package neural;
 
-import core.*;
+import core.Flow;
+import core.Node;
 
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
 public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
 
-    protected Receptor(BooleanSupplier booleanSupplier) {
+    protected Receptor(Network network, BooleanSupplier booleanSupplier) {
+        super(network);
         addInput(new Reception(booleanSupplier));
     }
 

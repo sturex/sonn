@@ -7,7 +7,8 @@ import java.util.List;
 
 public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
 
-    Effector(Runnable runnable) {
+    Effector(Network network, Runnable runnable) {
+        super(network);
         addOutput(new Action(runnable));
     }
 

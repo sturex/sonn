@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
+    private final Graph graph;
     private final List<T> inputs = new ArrayList<>();
     private final List<U> outputs = new ArrayList<>();
     private long collectedInputCounter;
@@ -14,6 +15,10 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     private Flow backwardFlow = Flow.STILL;
     private static int idCounter = 0;
     private final int id = idCounter++;
+
+    protected Node(Graph graph) {
+        this.graph = graph;
+    }
 
     public int getId() {
         return id;
@@ -69,12 +74,30 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
     public final void triggerConverge() {
         forwardFlow = convergeForward(inputs);
-        outputs.forEach(output -> output.acceptForward(forwardFlow));
+        if (outputSize() == 0) {
+            onDeadendFound();
+        } else {
+            outputs.forEach(output -> output.acceptForward(forwardFlow));
+        }
     }
 
     public void triggerBackpass() {
         backwardFlow = convergeBackward(outputs);
+        assert inputSize() != 0;
+        if (isDeadend()) {
+            onDeadendFound();
+        } else if (isSideway()) {
+            onSidewayFound();
+        }
         inputs.forEach(input -> input.acceptBackward(forwardFlow));
+    }
+
+    private void onDeadendFound() {
+        graph.onDeadendNodeFound(this);
+    }
+
+    private void onSidewayFound() {
+        graph.onSidewayNodeFound(this);
     }
 
     public final int inputSize() {

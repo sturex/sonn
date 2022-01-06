@@ -7,6 +7,10 @@ import java.util.List;
 
 public class Neuron extends Node<Synapse<Node<?, ?>, Node<?, ?>>, Synapse<Node<?, ?>, Node<?, ?>>> {
 
+    public Neuron(Network network) {
+        super(network);
+    }
+
     @Override
     public Flow convergeForward(List<Synapse<Node<?, ?>, Node<?, ?>>> ts) {
         return Network.convergeForward(ts);
