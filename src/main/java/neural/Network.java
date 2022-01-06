@@ -83,14 +83,9 @@ public class Network implements Graph {
     public void tick() {
         forwardPass();
         backwardPass();
-        addTargetNeuron();
         createNewConnections();
         notifyListeners();
         increaseTimestamp();
-    }
-
-    private void addTargetNeuron() {
-        targetNeuron = addNeuron();
     }
 
     private void notifyListeners() {
@@ -117,6 +112,8 @@ public class Network implements Graph {
     }
 
     private void createNewConnections() {
+        Optional.ofNullable(targetNeuron).ifPresent(this::onDeadendNodeFound);
+        targetNeuron = addNeuron();
         deadendNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.EXCITATORY));
         sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
         deadendNodes.clear();
