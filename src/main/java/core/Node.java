@@ -74,7 +74,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
     public final void triggerConverge() {
         forwardFlow = convergeForward(inputs);
-        if (outputSize() == 0) {
+        if (forwardFlow == Flow.RUN && outputSize() == 0) {
             onDeadendFound();
         } else {
             outputs.forEach(output -> output.acceptForward(forwardFlow));
