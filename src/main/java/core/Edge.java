@@ -61,4 +61,17 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
     public boolean isForwardRun() {
         return forwardFlow == Flow.RUN;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Edge edge) {
+            return id == edge.getId();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }
