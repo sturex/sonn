@@ -75,6 +75,7 @@ public class Network implements Graph {
 
     private Neuron addNeuron() {
         Neuron neuron = new Neuron(this);
+        neuron.setBackwardFlow(Flow.RUN);
         neurons.add(neuron);
         listeners.forEach(l -> l.onNeuronAdded(neuron));
         return neuron;

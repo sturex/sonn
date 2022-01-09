@@ -2,6 +2,7 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
@@ -18,6 +19,14 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
 
     protected Node(Graph graph) {
         this.graph = graph;
+    }
+
+    public void setForwardFlow(Flow forwardFlow) {
+        this.forwardFlow = Objects.requireNonNull(forwardFlow);
+    }
+
+    public void setBackwardFlow(Flow backwardFlow) {
+        this.backwardFlow = Objects.requireNonNull(backwardFlow);
     }
 
     public int getId() {
@@ -82,7 +91,9 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     public void triggerBackpass() {
-        backwardFlow = convergeBackward(outputs);
+        if (outputSize() != 0) {
+            backwardFlow = convergeBackward(outputs);
+        }
         assert inputSize() != 0;
         if (isDeadend()) {
             onDeadendFound();
