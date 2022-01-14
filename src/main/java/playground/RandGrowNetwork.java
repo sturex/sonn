@@ -5,24 +5,27 @@ import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
 import java.util.Random;
+import java.util.function.BooleanSupplier;
 
 public class RandGrowNetwork {
 
+    private static final Random random = new Random();
+    private static final BooleanSupplier bs = () -> random.nextInt(100) > 90;
+
     public static void main(String[] args) throws InterruptedException {
 
-        Random random = new Random();
-        Network network = new Network();
+        Network network = new Network(700);
 
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
 
-        network.addReceptor(random::nextBoolean);
-        network.addReceptor(random::nextBoolean);
-        network.addReceptor(random::nextBoolean);
-        network.addReceptor(random::nextBoolean);
+        network.addReceptor(bs);
+        network.addReceptor(bs);
+        network.addReceptor(bs);
+        network.addReceptor(bs);
 
-        for (int idx = 0; idx < 20; idx++) {
+        for (int idx = 0; idx < 2000; idx++) {
             network.tick();
-            Thread.sleep(50);
+            Thread.sleep(100);
         }
     }
 }
