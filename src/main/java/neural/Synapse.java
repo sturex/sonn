@@ -13,29 +13,38 @@ public class Synapse<T extends Node<?, ?>, U extends Node<?, ?>> extends Edge<T,
     Synapse(T input, U output, Type type) {
         super(input, output);
         this.type = type;
-        setBackwardFlow(Flow.RUN);
+        if (type == Type.EXCITATORY) {
+            setForwardFlow(Flow.RUN);
+        }
+    }
+
+    @Override
+    protected Flow combineForwardFlow(Flow forwardFlow, Flow backwardFlow, Flow acceptedFlow) {
+        if (isExcitatory() && forwardFlow == Flow.RUN) {
+            return forwardFlow;
+        } else {
+            return acceptedFlow;
+        }
+    }
+
+    @Override
+    protected Flow combineBackwardFlow(Flow forwardFlow, Flow backwardFlow, Flow acceptedFlow) {
+        if (acceptedFlow == Flow.RUN) {
+            setForwardFlow(Flow.STILL);
+        }
+        return acceptedFlow;
+    }
+
+    private boolean isExcitatory() {
+        return type == Type.EXCITATORY;
+    }
+
+    private boolean isInhibitory() {
+        return type == Type.INHIBITORY;
     }
 
     public Type getType() {
         return type;
-    }
-
-    @Override
-    public void acceptForward(Flow flow) {
-        if (getBackward() == Flow.RUN && type == Type.EXCITATORY) {
-            super.acceptForward(Flow.RUN);
-        } else {
-            super.acceptForward(flow);
-        }
-    }
-
-    @Override
-    public void acceptBackward(Flow flow) {
-        if (getForward() == Flow.RUN && type == Type.EXCITATORY) {
-            super.acceptBackward(flow);
-        } else {
-            super.acceptBackward(flow);
-        }
     }
 
     @Override

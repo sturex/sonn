@@ -37,15 +37,23 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
     }
 
     @Override
-    public void acceptForward(Flow flow) {
-        forwardFlow = flow;
+    public final void acceptForward(Flow flow) {
+        forwardFlow = combineForwardFlow(forwardFlow, backwardFlow, flow);
         output.collectInput();
     }
 
     @Override
-    public void acceptBackward(Flow flow) {
-        backwardFlow = flow;
+    public final void acceptBackward(Flow flow) {
+        backwardFlow = combineBackwardFlow(forwardFlow, backwardFlow, flow);
         input.collectOutput();
+    }
+
+    protected Flow combineForwardFlow(Flow forwardFlow, Flow backwardFlow, Flow acceptedFlow) {
+        return acceptedFlow;
+    }
+
+    protected Flow combineBackwardFlow(Flow forwardFlow, Flow backwardFlow, Flow acceptedFlow) {
+        return acceptedFlow;
     }
 
     @Override

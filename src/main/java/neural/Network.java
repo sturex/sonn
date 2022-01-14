@@ -7,7 +7,6 @@ import core.Node;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 public class Network implements Graph {
@@ -17,9 +16,15 @@ public class Network implements Graph {
     private final List<Neuron> neurons = new ArrayList<>();
     private final List<Node<?, ?>> deadendNodes = new ArrayList<>();
     private final List<Node<?, ?>> sidewayNodes = new ArrayList<>();
+    private final List<Node<?, ?>> leafNodes = new ArrayList<>();
     private final List<NetworkEventsListener> listeners = new ArrayList<>();
     private int timestamp = 0;
     Neuron targetNeuron = null;
+    private final int maxNeuronSize;
+
+    public Network(int maxNeuronSize) {
+        this.maxNeuronSize = maxNeuronSize;
+    }
 
     static Flow convergeForward(List<? extends Synapse<?, ?>> synapses) {
         assert !synapses.isEmpty();
@@ -75,7 +80,6 @@ public class Network implements Graph {
 
     private Neuron addNeuron() {
         Neuron neuron = new Neuron(this);
-        neuron.setBackwardFlow(Flow.RUN);
         neurons.add(neuron);
         listeners.forEach(l -> l.onNeuronAdded(neuron));
         return neuron;
@@ -83,9 +87,9 @@ public class Network implements Graph {
 
     public void tick() {
         forwardPass();
+        notifyListeners();
         backwardPass();
         createNewConnections();
-        notifyListeners();
         increaseTimestamp();
     }
 
@@ -105,7 +109,8 @@ public class Network implements Graph {
 
     private void backwardPass() {
         effectors.forEach(Node::triggerBackpass);
-        Optional.ofNullable(targetNeuron).ifPresent(Node::triggerBackpass);
+        leafNodes.forEach(Node::triggerBackpass);
+        leafNodes.clear();
     }
 
     private void forwardPass() {
@@ -113,10 +118,11 @@ public class Network implements Graph {
     }
 
     private void createNewConnections() {
-        Optional.ofNullable(targetNeuron).ifPresent(this::onDeadendNodeFound);
-        targetNeuron = addNeuron();
-        deadendNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.EXCITATORY));
-        sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
+        if (neurons.size() < maxNeuronSize) {
+            targetNeuron = addNeuron();
+            deadendNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.EXCITATORY));
+            sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
+        }
         deadendNodes.clear();
         sidewayNodes.clear();
     }
@@ -131,13 +137,26 @@ public class Network implements Graph {
 
     @Override
     public void onDeadendNodeFound(Node<?, ?> node) {
-        if (!deadendNodes.contains(node)) {
-            deadendNodes.add(node);
+        assert !deadendNodes.contains(node) : timestamp + ": " + node.toString();
+        //TODO ugly non-optimal workaround solution
+        if (node instanceof Neuron neuron) {
+            neuron.streamOfInputs().forEach(synapse -> {
+                if (synapse.getType() == Synapse.Type.EXCITATORY) {
+                    synapse.getInput().setParent();
+                }
+            });
         }
+        deadendNodes.add(node);
     }
 
     @Override
     public void onSidewayNodeFound(Node<?, ?> node) {
+        assert !sidewayNodes.contains(node) : timestamp + ": " + node.toString();
         sidewayNodes.add(node);
+    }
+
+    @Override
+    public void onLeafNodeFound(Node<?, ?> node) {
+        leafNodes.add(node);
     }
 }

@@ -16,6 +16,12 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     private Flow backwardFlow = Flow.STILL;
     private static int idCounter = 0;
     private final int id = idCounter++;
+    //TODO very ugly solution
+    private boolean isParent = false;
+
+    public void setParent(){
+        isParent = true;
+    }
 
     protected Node(Graph graph) {
         this.graph = graph;
@@ -42,12 +48,14 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     final void collectInput() {
+        assert collectedInputCounter < inputSize() : toString();
         if (everyInputCollected()) {
             triggerConverge();
         }
     }
 
     final void collectOutput() {
+        assert collectedOutputCounter < outputSize() : toString();
         if (everyOutputCollected()) {
             triggerBackpass();
         }
@@ -65,41 +73,42 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         return forwardFlow == Flow.RUN;
     }
 
-    public boolean isStill() {
-        return forwardFlow == backwardFlow && forwardFlow == Flow.STILL;
-    }
-
-    public boolean isRun() {
-        return forwardFlow == backwardFlow && forwardFlow == Flow.RUN;
-    }
-
-    public boolean isDeadend() {
+    private boolean isDeadend() {
         return forwardFlow == Flow.RUN && backwardFlow == Flow.STILL;
     }
 
-    public boolean isSideway() {
-        return forwardFlow == Flow.STILL && backwardFlow == Flow.RUN;
+    private boolean isSideway() {
+        return forwardFlow == Flow.STILL && backwardFlow == Flow.RUN && isParent;
     }
 
     public final void triggerConverge() {
+        isParent = false;
+        assert inputSize() != 0 : toString();
         forwardFlow = convergeForward(inputs);
-        if (forwardFlow == Flow.RUN && outputSize() == 0) {
-            onDeadendFound();
+        if (outputSize() == 0) {
+            onLeafFound();
+            if (isForwardRun()) {
+                onDeadendFound();
+            }
         } else {
             outputs.forEach(output -> output.acceptForward(forwardFlow));
         }
     }
 
+    private void onLeafFound() {
+        graph.onLeafNodeFound(this);
+    }
+
     public void triggerBackpass() {
         if (outputSize() != 0) {
             backwardFlow = convergeBackward(outputs);
+            if (isDeadend()) {
+                onDeadendFound();
+            } else if (isSideway()) {
+                onSidewayFound();
+            }
         }
-        assert inputSize() != 0;
-        if (isDeadend()) {
-            onDeadendFound();
-        } else if (isSideway()) {
-            onSidewayFound();
-        }
+        assert inputSize() != 0 : toString();
         inputs.forEach(input -> input.acceptBackward(forwardFlow));
     }
 
