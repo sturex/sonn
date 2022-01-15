@@ -2,12 +2,8 @@ package vis;
 
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.view.Viewer;
+import util.Util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.Optional;
 
 public class GraphStreamStaticLayout implements NetworkLayout {
@@ -31,23 +27,10 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     public GraphStreamStaticLayout() {
         System.setProperty("org.graphstream.ui", "swing");
         graph = new SingleGraph("0");
-        graph.setAttribute("ui.stylesheet", readStyles("layout/staticLayoutStyles.css"));
+        graph.setAttribute("ui.stylesheet", Util.readResourceFile("layout/staticLayoutStyles.css"));
         graph.setAttribute("ui.quality");
         graph.setAttribute("ui.antialias");
         Viewer viewer = graph.display(false);
-    }
-
-    private String readStyles(String fileName) {
-        URL resource = getClass().getClassLoader().getResource(fileName);
-        if (resource == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
-        } else {
-            try {
-                return Files.readString(new File(resource.toURI()).toPath());
-            } catch (IOException | URISyntaxException e) {
-                throw new RuntimeException("Couldn't read styles from resources");
-            }
-        }
     }
 
     @Override

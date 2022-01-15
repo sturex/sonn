@@ -1,0 +1,57 @@
+node {
+
+    size: 0.4gu;
+    fill-color: blue;
+    text-mode: hidden;
+    z-index: 0;
+}
+
+edge {
+    shape: line;
+    arrow-size: 5px, 2px;
+}
+
+node.input {
+    size: 16px;
+    fill-color: yellow;
+    text-mode: hidden;
+    z-index: 0;
+}
+
+node.inner {
+    size: 16px;
+    fill-color: blue;
+    text-mode: hidden;
+    z-index: 0;
+}
+
+node.output {
+    size: 16px;
+    fill-color: cyan;
+    text-mode: hidden;
+    z-index: 0;
+}
+
+node.training_input {
+    size: 16px;
+    fill-color: black;
+    text-mode: hidden;
+    z-index: 0;
+}
+
+
+edge.negative {
+    stroke-color: red;
+    fill-color: red;
+    stroke-width: 1px;
+    stroke-mode: plain;
+    z-index: 0;
+}
+
+edge.positive {
+    stroke-color: green;
+    fill-color: green;
+    stroke-width: 1px;
+    stroke-mode: plain;
+    z-index: 100;
+}
