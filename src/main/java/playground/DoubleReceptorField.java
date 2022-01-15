@@ -1,5 +1,6 @@
 package playground;
 
+import neural.Bounds;
 import neural.Network;
 import vis.GraphStreamDynamicLayout;
 import vis.GraphStreamStaticLayout;
@@ -8,9 +9,6 @@ import vis.LayoutAdapter;
 import java.util.Random;
 
 public class DoubleReceptorField {
-
-    record Bounds(double lowerBound, double upperBound) {
-    }
 
     private static final Random random = new Random();
     private static double d = 0.;
@@ -25,10 +23,7 @@ public class DoubleReceptorField {
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
         network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
 
-        network.addReceptorField(() -> d,
-                new Bounds(lowerBound, upperBound),
-                bCount,
-                (value, bounds) -> (int) ((value - bounds.lowerBound) / ((bounds.upperBound - bounds.lowerBound) / bCount)));
+        network.addDoubleReception(() -> d, new Bounds(lowerBound, upperBound), bCount);
 
         while (true) {
             network.tick();

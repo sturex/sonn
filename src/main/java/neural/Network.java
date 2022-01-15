@@ -7,10 +7,7 @@ import core.Node;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.BooleanSupplier;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class Network implements Graph {
 
@@ -62,6 +59,13 @@ public class Network implements Graph {
                 return bucketIndex == bdx;
             });
         }
+    }
+
+    public void addDoubleReception(DoubleSupplier doubleSupplier, Bounds bounds, int receptorCount){
+        addReceptorField(doubleSupplier::getAsDouble,
+                bounds,
+                receptorCount,
+                (value, bounds1) -> (int) ((value - bounds1.lowerBound()) / ((bounds1.upperBound() - bounds1.lowerBound()) / receptorCount)));
     }
 
     public int getTimestamp() {
