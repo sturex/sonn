@@ -7,7 +7,7 @@ import vis.LayoutAdapter;
 
 import java.util.Random;
 
-public class DoubleReceptorFiled {
+public class DoubleReceptorField {
 
     record Bounds(double lowerBound, double upperBound) {
     }
