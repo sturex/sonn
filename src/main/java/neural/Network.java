@@ -7,7 +7,10 @@ import core.Node;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Network implements Graph {
 
@@ -104,6 +107,7 @@ public class Network implements Graph {
         forwardPass();
         notifyListeners();
         backwardPass();
+        listeners.forEach(l -> l.onDeadendNodesDetected(deadendNodes));
         createNewConnections();
         increaseTimestamp();
     }
