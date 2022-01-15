@@ -2,6 +2,8 @@ package neural;
 
 import core.Node;
 
+import java.util.List;
+
 public interface NetworkEventsListener {
 
     default void onReceptorStateChanged(Receptor receptor){}
@@ -19,4 +21,6 @@ public interface NetworkEventsListener {
     default void onNeuronAdded(Neuron neuron){}
 
     default void onSynapseAdded(Synapse<?, ?> synapse){}
+
+    default void onDeadendNodesDetected(List<Node<?, ?>> deadendNodes){}
 }
