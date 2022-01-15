@@ -111,7 +111,7 @@ public class Network implements Graph {
         forwardPass();
         notifyListeners();
         backwardPass();
-        listeners.forEach(l -> l.onDeadendNodesDetected(deadendNodes));
+        listeners.forEach(l -> l.onDeadendNodesDetected(deadendNodes, receptors.size() + neurons.size()));
         createNewConnections();
         increaseTimestamp();
     }
