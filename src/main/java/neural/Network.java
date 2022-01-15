@@ -46,6 +46,21 @@ public class Network implements Graph {
         }
     }
 
+    public <T> void addReceptor(T t, Function<T, BooleanSupplier> transform) {
+        addReceptor(transform.apply(t));
+    }
+
+    public <T, U> void addReceptorField(Supplier<T> tSupplier, U u, int receptorCount, BiFunction<T, U, Integer> receptorMapper) {
+        for (int i = 0; i < receptorCount; i++) {
+            int bdx = i;
+            addReceptor(tSupplier, t1 -> () -> {
+                int bucketIndex = receptorMapper.apply(tSupplier.get(), u);
+                bucketIndex = bucketIndex < 0 ? 0 : Math.min(bucketIndex, receptorCount - 1);
+                return bucketIndex == bdx;
+            });
+        }
+    }
+
     public int getTimestamp() {
         return timestamp;
     }
