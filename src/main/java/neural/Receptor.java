@@ -9,7 +9,7 @@ import java.util.function.BooleanSupplier;
 public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
 
     protected Receptor(Network network, BooleanSupplier booleanSupplier) {
-        super(network, network.getReceptorCount());
+        super(network, network.getNodesCount());
         addInput(new Reception(booleanSupplier));
     }
 

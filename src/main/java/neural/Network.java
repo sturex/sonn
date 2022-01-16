@@ -194,4 +194,8 @@ public class Network implements Graph {
     public int getEffectorCount() {
         return effectors.size();
     }
+
+    public int getNodesCount() {
+        return neurons.size() + receptors.size() + effectors.size();
+    }
 }
