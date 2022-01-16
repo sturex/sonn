@@ -21,15 +21,47 @@ While the core logic certainly will have few SLOC the abilities are expected to 
 
 - Zoo of [AI applications](https://en.wikipedia.org/wiki/Applications_of_artificial_intelligence)
 
-## Current state
+## Visualization
 
-Rewriting the original Self-organized Neural Network pet project from the scratch. Fine-tuning core logic now.
+I use awesome [GraphStream](https://graphstream-project.org/) library for layout of the network.
+Visualization is aimed mostly for development and showcase purposes. 
 
-Proof-of-concept, Single-threaded and Non-optimized.
+Green color is for **Excitatory** synapses, Red color for **Inhibitory** ones. 
 
-It has visualization now!
+### Static layout can be applied as follows
 
-![Alt text](src/main/resources/git/scr1.jpg?raw=true "Title")
+``` java 
+network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
+```
+It just an adjacency matrix of underlying directed graph. The **Flow** (core concept expression) passes from bottom to left side of matrix. 
+The circles are neurons aka nodes. The squares stay for edges.
+Static layout has an event-based methods for to react to Flow bypassing through nodes and edges - 
+this is why different squares opaqueness and circles sizes are happened.
+
+![Alt text](src/main/resources/git/scr1.jpg?raw=true "Static layout")
+
+### Dynamic layout can be applied as follows
+
+``` java 
+network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
+```
+
+This is the basic graph representation with GraphStream's out-of-the-box dynamic layout. Note, the image below shows a very simple graph layout while complex ones are totally unreadable and useless. 
+
+![Alt text](src/main/resources/git/scr2.jpg?raw=true "Dynamic layout")
+
+## Current state and next steps
+
+_Proof-of-concept, Single-threaded and Non-optimized._
+
+- ✔️Rewriting the original Self-organized Neural Network pet project from the scratch
+- ✔️Fine-tuning core logic. ⚠️Implemented an ugly workaround solution in core - should fix it
+- ✔️Network grow implemented 
+- Reinforcement learning implementation
+- Working on real-world application samples
+  - ✔️[Outlier detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**. Sample code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/OutlierDetectionSample.java).
+  - Pattern recognition on **multivariate time-series** data with **noise**
+
 
 ## How to start with it
 
@@ -44,6 +76,7 @@ Random random = new Random();
 Network network = new Network();
 
 network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
+network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
 
 network.addReceptor(random::nextBoolean);
 network.addReceptor(random::nextBoolean);
@@ -56,8 +89,3 @@ for (int idx = 0; idx < 20; idx++) {
 }
 ```
 
-## Near or far future steps
-After polishing the core I will also add rwa (Real-World Applications) package with some approaches to common AI problems
-- [Anomaly detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**
-- Pattern recognition on **multivariate time-series** data with **noise**
-- True [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) based approach to training unmanned vehicles, [UAV](https://en.wikipedia.org/wiki/Unmanned_aerial_vehicle) or [UGV](https://en.wikipedia.org/wiki/Unmanned_ground_vehicle) etc.
