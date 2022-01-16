@@ -8,8 +8,6 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
     private final U output;
     private Flow forwardFlow = Flow.STILL;
     private Flow backwardFlow = Flow.STILL;
-    private static int idCounter = 0;
-    private final int id = idCounter++;
 
     public Edge(T input, U output) {
         this.input = input;
@@ -30,10 +28,6 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
 
     public U getOutput() {
         return output;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override
@@ -68,18 +62,5 @@ public abstract class Edge<T extends Node<? extends FlowSupplier, ? extends Flow
 
     public boolean isForwardRun() {
         return forwardFlow == Flow.RUN;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Edge edge) {
-            return id == edge.getId();
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
     }
 }
