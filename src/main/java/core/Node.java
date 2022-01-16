@@ -14,8 +14,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     private long collectedOutputCounter;
     private Flow forwardFlow = Flow.STILL;
     private Flow backwardFlow = Flow.STILL;
-    private static int idCounter = 0;
-    private final int id = idCounter++;
+    private final int id;
     //TODO very ugly solution
     private boolean isParent = false;
 
@@ -23,8 +22,9 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         isParent = true;
     }
 
-    protected Node(Graph graph) {
+    protected Node(Graph graph, int id) {
         this.graph = graph;
+        this.id = id;
     }
 
     public void setForwardFlow(Flow forwardFlow) {
@@ -156,19 +156,6 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     public final void addOutput(U u) {
         assert !outputs.contains(u);
         outputs.add(u);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Node node) {
-            return id == node.getId();
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
     }
 
     @Override

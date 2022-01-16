@@ -182,4 +182,16 @@ public class Network implements Graph {
     public void onLeafNodeFound(Node<?, ?> node) {
         leafNodes.add(node);
     }
+
+    public int getNeuronCount() {
+        return neurons.size();
+    }
+
+    public int getReceptorCount() {
+        return receptors.size();
+    }
+
+    public int getEffectorCount() {
+        return effectors.size();
+    }
 }
