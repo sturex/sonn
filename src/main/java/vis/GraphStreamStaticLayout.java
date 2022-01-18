@@ -27,7 +27,7 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     public GraphStreamStaticLayout() {
         System.setProperty("org.graphstream.ui", "swing");
         graph = new SingleGraph("0");
-        graph.setAttribute("ui.stylesheet", Util.readResourceFile("layout/staticLayoutStyles.css"));
+        graph.setAttribute("ui.stylesheet", Util.readAsString("layout/staticLayoutStyles.css"));
         graph.setAttribute("ui.quality");
         graph.setAttribute("ui.antialias");
         Viewer viewer = graph.display(false);

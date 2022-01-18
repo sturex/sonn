@@ -11,7 +11,7 @@ public class GraphStreamDynamicLayout implements NetworkLayout {
     public GraphStreamDynamicLayout() {
         System.setProperty("org.graphstream.ui", "swing");
         graph = new SingleGraph("0");
-        graph.setAttribute("ui.stylesheet", Util.readResourceFile("layout/dynamicLayoutStyles.css"));
+        graph.setAttribute("ui.stylesheet", Util.readAsString("layout/dynamicLayoutStyles.css"));
         graph.setAttribute("ui.quality");
         graph.setAttribute("ui.antialias");
         Viewer viewer = graph.display(true);

@@ -12,7 +12,7 @@ public class Util {
     private Util() {
     }
 
-    public static String readResourceFile(String fileName) {
+    public static String readAsString(String fileName) {
         URL resource = Util.class.getClassLoader().getResource(fileName);
         if (resource == null) {
             throw new IllegalArgumentException("File not found! " + fileName);
