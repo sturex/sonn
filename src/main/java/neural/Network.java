@@ -4,14 +4,16 @@ import core.Flow;
 import core.Graph;
 import core.Node;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
 public class Network implements Graph {
 
+    public static final int OUT_OF_RANGE_VALUE = -1;
     private final List<Receptor> receptors = new ArrayList<>();
+    private final List<Receptor> addedReceptors = new ArrayList<>();
     private final List<Effector> effectors = new ArrayList<>();
     private final List<Neuron> neurons = new ArrayList<>();
     private final List<Node<?, ?>> deadendNodes = new ArrayList<>();
@@ -46,22 +48,92 @@ public class Network implements Graph {
         }
     }
 
-    public <T> void addReceptor(T t, Function<T, BooleanSupplier> transform) {
-        addReceptor(transform.apply(t));
+    public void resetState(){
+        neurons.forEach(Neuron::resetState);
+        receptors.forEach(Receptor::resetState);
     }
 
+    /**
+     * Adds a reception for single object.
+     *
+     * @param t object supplier
+     * @param adapter transformation function from source supplier to supplier of booleans
+     * @param <T> type parameter bounded to Supplier
+     * @return just created {@link Receptor} instance
+     */
+    public <T extends Supplier<?>> Receptor addReceptor(T t, Function<T, BooleanSupplier> adapter) {
+        return addReceptor(adapter.apply(t));
+    }
+
+    /**
+     * Adds a set of receptors for objects being supplied by supplier.
+     *
+     * @param tSupplier object supplier
+     * @param u compound parameter to use in mapping function
+     * @param receptorCount buckets count
+     * @param receptorMapper mapping function from object being provided by supplier and receptor index
+     * @param <T> type parameter
+     * @param <U> type parameter
+     */
     public <T, U> void addReceptorField(Supplier<T> tSupplier, U u, int receptorCount, BiFunction<T, U, Integer> receptorMapper) {
         for (int i = 0; i < receptorCount; i++) {
             int bdx = i;
-            addReceptor(tSupplier, t1 -> () -> {
-                int bucketIndex = receptorMapper.apply(tSupplier.get(), u);
-                bucketIndex = bucketIndex < 0 ? 0 : Math.min(bucketIndex, receptorCount - 1);
-                return bucketIndex == bdx;
-            });
+            addReceptor(tSupplier, t1 -> () -> receptorMapper.apply(tSupplier.get(), u) == bdx);
         }
     }
 
-    public void addDoubleReception(DoubleSupplier doubleSupplier, Bounds bounds, int receptorCount){
+    /**
+     * Creates a receptors for each object in dictionary.
+     * Dict is final and non-extensible.
+     * If the supplier supplies unknown object nothing will happen, no one receptor will be excited by the object.
+     *
+     * @param valueSupplier a channel by which objects are delivered to set of receptors
+     * @param dictionary a non-empty set with exact object values to be mapped to initial receptors
+     */
+    public void addStrictDictReceptor(Supplier<Object> valueSupplier, Set<Object> dictionary) {
+        AtomicInteger idx = new AtomicInteger();
+        Map<Object, Integer> indexMapping = dictionary.stream().collect(Collectors.toMap(t -> t, t -> idx.incrementAndGet()));
+        indexMapping.keySet().forEach(t -> {
+            int index = indexMapping.getOrDefault(t, OUT_OF_RANGE_VALUE);
+            addReceptor(valueSupplier, supplier -> () -> indexMapping.get(supplier.get()).equals(index));
+        });
+    }
+
+    /**
+     * Creates a receptors for each object in dictionary.
+     * At runtime for each unknown object being supplied by supplier separate receptor will be created.
+     * It is possible to call for method several times. Thus, several sets will be created, exactly one for every supplier.
+     *
+     * @param valueSupplier a channel by which objects are delivered to set of receptors
+     * @param dictionary a non-empty set with initial object values to be mapped to initial receptors
+     */
+    public void addAdaptiveDictReceptor(Supplier<Object> valueSupplier, Set<Object> dictionary) {
+        if (dictionary.isEmpty()) {
+            throw new RuntimeException("The dictionary cannot be empty");
+        }
+        AtomicInteger idx = new AtomicInteger();
+        Map<Object, Integer> objectRegistry = dictionary.stream().collect(Collectors.toMap(t -> t, t -> idx.getAndIncrement()));
+        objectRegistry.keySet().forEach(t -> addReceptor(valueSupplier, supplier -> () -> adaptiveEvaluator(valueSupplier, idx, objectRegistry, objectRegistry.get(t))));
+    }
+
+    private boolean adaptiveEvaluator(Supplier<Object> valueSupplier, AtomicInteger idx, Map<Object, Integer> objectRegistry, int testReceptorIndex) {
+        Object value = valueSupplier.get();
+        int receptorIndex = objectRegistry.getOrDefault(value, OUT_OF_RANGE_VALUE);
+        if (receptorIndex == OUT_OF_RANGE_VALUE) {
+            int rIndex = objectRegistry.computeIfAbsent(value, v -> idx.getAndIncrement());
+            Receptor receptor = addReceptor(valueSupplier, supplier -> () -> adaptiveEvaluator(supplier, idx, objectRegistry, rIndex));
+            receptor.triggerConverge();
+            return false;
+        } else {
+            return testReceptorIndex == receptorIndex;
+        }
+    }
+
+    public void addCharacterReception(Supplier<Character> characterSupplier, Character fromCharacter, int receptorCount) {
+        addReceptorField(characterSupplier, fromCharacter, receptorCount, (character, character2) -> character - character2);
+    }
+
+    public void addDoubleReception(DoubleSupplier doubleSupplier, Bounds bounds, int receptorCount) {
         addReceptorField(doubleSupplier::getAsDouble,
                 bounds,
                 receptorCount,
@@ -82,7 +154,7 @@ public class Network implements Graph {
 
     public Receptor addReceptor(BooleanSupplier booleanSupplier) {
         Receptor receptor = new Receptor(this, Objects.requireNonNull(booleanSupplier));
-        receptors.add(receptor);
+        addedReceptors.add(receptor);
         listeners.forEach(l -> l.onReceptorAdded(receptor));
         return receptor;
     }
@@ -108,12 +180,20 @@ public class Network implements Graph {
     }
 
     public void tick() {
+        mergeReceptors();
         forwardPass();
         notifyListeners();
         backwardPass();
         listeners.forEach(l -> l.onDeadendNodesDetected(deadendNodes, receptors.size() + neurons.size()));
         createNewConnections();
         increaseTimestamp();
+    }
+
+    private void mergeReceptors() {
+        if (!addedReceptors.isEmpty()) {
+            receptors.addAll(addedReceptors);
+            addedReceptors.clear();
+        }
     }
 
     private void notifyListeners() {
@@ -196,6 +276,6 @@ public class Network implements Graph {
     }
 
     public int getNodesCount() {
-        return neurons.size() + receptors.size() + effectors.size();
+        return neurons.size() + receptors.size() + addedReceptors.size() + effectors.size();
     }
 }

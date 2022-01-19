@@ -25,4 +25,8 @@ public class Neuron extends Node<Synapse<Node<?, ?>, Node<?, ?>>, Synapse<Node<?
     public String toString() {
         return "N" + super.toString();
     }
+
+    public void resetState() {
+        streamOfOutputs().forEach(Synapse::resetState);
+    }
 }

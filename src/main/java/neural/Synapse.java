@@ -4,6 +4,11 @@ import core.*;
 
 public class Synapse<T extends Node<?, ?>, U extends Node<?, ?>> extends Edge<T, U> implements FlowConsumer, FlowSupplier {
 
+    public void resetState() {
+        setForwardFlow(Flow.STILL);
+        setBackwardFlow(Flow.STILL);
+    }
+
     public enum Type {
         INHIBITORY, EXCITATORY
     }

@@ -27,4 +27,8 @@ public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
     public String toString() {
         return "R" + super.toString();
     }
+
+    public void resetState() {
+        streamOfOutputs().forEach(Synapse::resetState);
+    }
 }
