@@ -6,7 +6,9 @@ import neural.Network;
 import neural.NetworkEventsListener;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class NeuralOutlierDetector implements OutlierDetector {
 
@@ -27,6 +29,11 @@ public class NeuralOutlierDetector implements OutlierDetector {
     @Override
     public void addChannel(DoubleSupplier ds, Bounds bounds, int bucketCount) {
         network.addDoubleReception(ds, bounds, bucketCount);
+    }
+
+    @Override
+    public void addAdaptiveChannel(Supplier<Object> supplier, Set<Object> dictionary) {
+        network.addAdaptiveDictReceptor(supplier, dictionary);
     }
 
     @Override
