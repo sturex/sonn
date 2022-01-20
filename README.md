@@ -3,6 +3,12 @@ This is Java lab for developing and experimenting with brand-new AI technology.
 The technology is fully my own and hadn't been published anywhere.
 Core code is non-commercial for now and will always be non-commercial in future while commercial product based on it are feasible.
 
+## How it works
+
+The idea is based on principles of self-organization where the network structure adaptively grows by interfering between previous and current states shapshots. It has long-term memory written in network structure and short-term memory written in nodes and edges states. 
+
+The model does not use complex math formulas for a neuron or synapse behavior. All computations are performed on graph where each node acts like a gate to the input abstract flow which is divisible but equal.
+
 # ✨ Priceless thousand Source Lines of code ✨
 
 While the core logic certainly will have few SLOC the abilities are expected to be very wide and powerful.
