@@ -11,7 +11,7 @@ public class Playground {
 
     public static void main(String[] args) throws InterruptedException {
 
-        Network network = new Network(500);
+        Network network = new Network(50);
 
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
 

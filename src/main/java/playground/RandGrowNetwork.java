@@ -1,6 +1,7 @@
 package playground;
 
 import neural.Network;
+import vis.GraphStreamDynamicLayout;
 import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
@@ -10,22 +11,22 @@ import java.util.function.BooleanSupplier;
 public class RandGrowNetwork {
 
     private static final Random random = new Random();
-    private static final BooleanSupplier bs = () -> random.nextInt(100) > 90;
+    private static int i = 0;
+    private static final BooleanSupplier bs = () -> i++ == 0 || random.nextInt(100) > 96;
 
     public static void main(String[] args) throws InterruptedException {
 
-        Network network = new Network(700);
+        Network network = new Network(100);
 
+        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
 
         network.addReceptor(bs);
-        network.addReceptor(bs);
-        network.addReceptor(bs);
-        network.addReceptor(bs);
 
-        for (int idx = 0; idx < 2000; idx++) {
+        for (int idx = 0; idx < 200; idx++) {
+            System.out.print(idx + ": ");
             network.tick();
-            Thread.sleep(100);
+            Thread.sleep(200);
         }
     }
 }
