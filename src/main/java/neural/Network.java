@@ -95,7 +95,10 @@ public class Network implements Graph {
         Map<Object, Integer> indexMapping = dictionary.stream().collect(Collectors.toMap(t -> t, t -> idx.incrementAndGet()));
         indexMapping.keySet().forEach(t -> {
             int index = indexMapping.getOrDefault(t, OUT_OF_RANGE_VALUE);
-            addReceptor(valueSupplier, supplier -> () -> indexMapping.get(supplier.get()).equals(index));
+            addReceptor(valueSupplier, supplier -> () -> {
+                Integer receptorIndex = indexMapping.get(supplier.get());
+                return receptorIndex != null && receptorIndex.equals(index);
+            });
         });
     }
 
