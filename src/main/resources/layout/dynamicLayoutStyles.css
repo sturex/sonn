@@ -39,7 +39,7 @@ node.training_input {
 }
 
 
-edge.inhibitory {
+edge.still_inhibitory {
     stroke-color: red;
     fill-color: red;
     stroke-width: 1px;
@@ -47,7 +47,23 @@ edge.inhibitory {
     z-index: 0;
 }
 
-edge.excitatory {
+edge.still_excitatory {
+    stroke-color: green;
+    fill-color: green;
+    stroke-width: 1px;
+    stroke-mode: plain;
+    z-index: 100;
+}
+
+edge.bypassed_inhibitory {
+    stroke-color: red;
+    fill-color: red;
+    stroke-width: 1px;
+    stroke-mode: plain;
+    z-index: 0;
+}
+
+edge.bypassed_excitatory {
     stroke-color: green;
     fill-color: green;
     stroke-width: 1px;
