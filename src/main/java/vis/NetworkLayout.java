@@ -6,9 +6,11 @@ public interface NetworkLayout {
 
     void addOutputNode(LayoutOutputNode outputNode);
 
-    void addInnerNode(LayoutInnerNode innerNode, boolean isGreen);
+    void addInnerNode(LayoutInnerNode innerNode);
 
-    void updateInnerNode(LayoutInnerNode innerNode, boolean isRun, boolean isGreen);
+    void addEdge(LayoutEdge layoutEdge);
+
+    void updateInnerNode(LayoutEdge layoutEdge);
 
     void updateInputNode(LayoutInputNode inputNode, boolean isEnlarged);
 

@@ -1,6 +1,5 @@
 package vis;
 
-import core.Node;
 import neural.*;
 
 public class LayoutAdapter implements NetworkEventsListener {
@@ -29,9 +28,7 @@ public class LayoutAdapter implements NetworkEventsListener {
 
     @Override
     public void onSynapseStateChanged(Synapse<?, ?> synapse) {
-        Node<?, ?> output = synapse.getOutput();
-        Node<?, ?> input = synapse.getInput();
-        layout.updateInnerNode(LayoutInnerNode.of(input, output), synapse.isForwardRun(), synapse.getType() == Synapse.Type.EXCITATORY);
+        layout.updateInnerNode(LayoutEdge.of(synapse));
     }
 
     @Override
@@ -46,14 +43,11 @@ public class LayoutAdapter implements NetworkEventsListener {
 
     @Override
     public void onNeuronAdded(Neuron neuron) {
-        layout.addInputNode(LayoutInputNode.of(neuron));
-        layout.addOutputNode(LayoutOutputNode.of(neuron));
+        layout.addInnerNode(LayoutInnerNode.of(neuron));
     }
 
     @Override
     public void onSynapseAdded(Synapse<?, ?> synapse) {
-        Node<?, ?> output = synapse.getOutput();
-        Node<?, ?> input = synapse.getInput();
-        layout.addInnerNode(LayoutInnerNode.of(input, output), synapse.getType() == Synapse.Type.EXCITATORY);
+        layout.addEdge(LayoutEdge.of(synapse));
     }
 }

@@ -20,24 +20,31 @@ public class GraphStreamDynamicLayout implements NetworkLayout {
     @Override
     public void addInputNode(LayoutInputNode inputNode) {
         org.graphstream.graph.Node node = graph.addNode(String.valueOf(inputNode.getId()));
-        node.setAttribute("ui.class", "node");
+        node.setAttribute("ui.class", inputNode.getUiClass());
     }
 
     @Override
     public void addOutputNode(LayoutOutputNode outputNode) {
-
+        org.graphstream.graph.Node node = graph.addNode(String.valueOf(outputNode.getId()));
+        node.setAttribute("ui.class", outputNode.getUiClass());
     }
 
     @Override
-    public void addInnerNode(LayoutInnerNode innerNode, boolean isGreen) {
-        org.graphstream.graph.Edge edge = graph.addEdge(getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId()),
-                String.valueOf(innerNode.getSourceId()),
-                String.valueOf(innerNode.getTargetId()), true);
-        edge.setAttribute("ui.class", isGreen ? "positive" : "negative");
+    public void addInnerNode(LayoutInnerNode innerNode) {
+        org.graphstream.graph.Node node = graph.addNode(String.valueOf(innerNode.getId()));
+        node.setAttribute("ui.class", innerNode.getUiClass());
     }
 
     @Override
-    public void updateInnerNode(LayoutInnerNode innerNode, boolean isRun, boolean isGreen) {
+    public void addEdge(LayoutEdge layoutEdge) {
+        org.graphstream.graph.Edge edge = graph.addEdge(getInnerNodeId(layoutEdge.getSourceId(), layoutEdge.getTargetId()),
+                String.valueOf(layoutEdge.getSourceId()),
+                String.valueOf(layoutEdge.getTargetId()), true);
+        edge.setAttribute("ui.class", layoutEdge.getUiClass());
+    }
+
+    @Override
+    public void updateInnerNode(LayoutEdge layoutEdge) {
 
     }
 

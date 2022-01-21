@@ -8,9 +8,6 @@ import java.util.Optional;
 
 public class GraphStreamStaticLayout implements NetworkLayout {
 
-    public static final String INPUT = "input";
-    public static final String OUTPUT = "output";
-    public static final String INNER = "inner";
     public static final String INITIAL_POSITIVE = "initial_positive";
     public static final String INITIAL_NEGATIVE = "initial_negative";
     public static final String BYPASSED_POSITIVE = "bypassed_positive";
@@ -36,7 +33,7 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     @Override
     public void addInputNode(LayoutInputNode inputNode) {
         org.graphstream.graph.Node node = addNode(new Coords(++horizontalCount, Y_START),
-                getHorizontalNodeId(inputNode.getId()), INPUT);
+                getHorizontalNodeId(inputNode.getId()), inputNode.getUiClass());
         node.setAttribute("ui.label", node.getId());
         updateHorizontalNode(inputNode, false);
     }
@@ -63,9 +60,15 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     @Override
     public void addOutputNode(LayoutOutputNode outputNode) {
         org.graphstream.graph.Node node = addNode(new Coords(X_START, ++verticalCount),
-                getVerticalNodeId(outputNode.getId()), OUTPUT);
+                getVerticalNodeId(outputNode.getId()), outputNode.getUiClass());
         node.setAttribute("ui.label", node.getId());
         updateVerticalNode(outputNode, false);
+    }
+
+    @Override
+    public void addInnerNode(LayoutInnerNode innerNode) {
+        addOutputNode(LayoutOutputNode.of(innerNode));
+        addInputNode(LayoutInputNode.of(innerNode));
     }
 
     private void updateVerticalNode(LayoutOutputNode outputNode, boolean isEnlarged) {
@@ -81,37 +84,23 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     }
 
     @Override
-    public void addInnerNode(LayoutInnerNode innerNode, boolean isGreen) {
-        org.graphstream.graph.Node verticalNode = graph.getNode(getVerticalNodeId(innerNode.getTargetId()));
-        org.graphstream.graph.Node horizontalNode = graph.getNode(getHorizontalNodeId(innerNode.getSourceId()));
+    public void addEdge(LayoutEdge layoutEdge) {
+        org.graphstream.graph.Node verticalNode = graph.getNode(getVerticalNodeId(layoutEdge.getTargetId()));
+        org.graphstream.graph.Node horizontalNode = graph.getNode(getHorizontalNodeId(layoutEdge.getSourceId()));
         Object[] xyzV = verticalNode.getAttribute("xyz", Object[].class);
         Object[] xyzH = horizontalNode.getAttribute("xyz", Object[].class);
         org.graphstream.graph.Node node = addNode(new Coords((int) xyzH[0], (int) xyzV[1]),
-                getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId()), INNER);
+                getInnerNodeId(layoutEdge.getSourceId(), layoutEdge.getTargetId()), layoutEdge.getUiClass());
         node.setAttribute("ui.label", node.getId());
-        node.setAttribute("ui.class", isGreen ? INITIAL_POSITIVE : INITIAL_NEGATIVE);
+        node.setAttribute("ui.class", layoutEdge.getUiClass());
     }
 
     @Override
-    public void updateInnerNode(LayoutInnerNode innerNode, boolean isRun, boolean isGreen) {
-        String id = getInnerNodeId(innerNode.getSourceId(), innerNode.getTargetId());
-        String classAsNodeColor;
-        if (isRun) {
-            if (isGreen) {
-                classAsNodeColor = BYPASSED_POSITIVE;
-            } else {
-                classAsNodeColor = BYPASSED_NEGATIVE;
-            }
-        } else {
-            if (isGreen) {
-                classAsNodeColor = INITIAL_POSITIVE;
-            } else {
-                classAsNodeColor = INITIAL_NEGATIVE;
-            }
-        }
+    public void updateInnerNode(LayoutEdge layoutEdge) {
+        String id = getInnerNodeId(layoutEdge.getSourceId(), layoutEdge.getTargetId());
         Optional.ofNullable(graph.getNode(id))
                 .orElseThrow(() -> new RuntimeException("Not found inner node with id: " + id))
-                .setAttribute("ui.class", classAsNodeColor);
+                .setAttribute("ui.class", layoutEdge.getUiClass());
     }
 
     @Override

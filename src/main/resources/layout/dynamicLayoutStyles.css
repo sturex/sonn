@@ -1,6 +1,5 @@
 node {
-
-    size: 0.4gu;
+    size: 0.3gu;
     fill-color: blue;
     text-mode: hidden;
     z-index: 0;
@@ -11,36 +10,36 @@ edge {
     arrow-size: 5px, 2px;
 }
 
-node.input {
-    size: 16px;
+node.receptor {
+    size: 0.3gu;
     fill-color: yellow;
     text-mode: hidden;
     z-index: 0;
 }
 
-node.inner {
-    size: 16px;
+node.neuron {
+    size: 0.3gu;
     fill-color: blue;
     text-mode: hidden;
     z-index: 0;
 }
 
-node.output {
-    size: 16px;
+node.effector {
+    size: 0.3gu;
     fill-color: cyan;
     text-mode: hidden;
     z-index: 0;
 }
 
 node.training_input {
-    size: 16px;
+    size: 0.3gu;
     fill-color: black;
     text-mode: hidden;
     z-index: 0;
 }
 
 
-edge.negative {
+edge.inhibitory {
     stroke-color: red;
     fill-color: red;
     stroke-width: 1px;
@@ -48,7 +47,7 @@ edge.negative {
     z-index: 0;
 }
 
-edge.positive {
+edge.excitatory {
     stroke-color: green;
     fill-color: green;
     stroke-width: 1px;

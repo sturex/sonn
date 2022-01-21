@@ -31,7 +31,7 @@ node.training_output {
     text-mode: normal;
 }
 
-node.inner {
+node.neuron {
     stroke-color: blue;
     stroke-mode: none;
     padding: 1px;
@@ -40,8 +40,8 @@ node.inner {
     text-mode: normal;
 }
 
-node.input {
-    stroke-color: black;
+node.receptor {
+    stroke-color: blue;
     stroke-mode: plain;
     padding: 1px;
     shape: pie-chart;
@@ -49,8 +49,8 @@ node.input {
     text-mode: normal;
 }
 
-node.output {
-    stroke-color: black;
+node.effector {
+    stroke-color: blue;
     stroke-mode: plain;
     padding: 1px;
     shape: pie-chart;
@@ -58,25 +58,25 @@ node.output {
     text-mode: normal;
 }
 
-node.initial_negative {
+node.still_inhibitory {
     size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(255, 200, 200);
 }
 
-node.initial_positive {
+node.still_excitatory {
     size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(200, 255, 200);
 }
 
-node.bypassed_negative {
+node.bypassed_inhibitory {
     size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(255, 0, 0);
 }
 
-node.bypassed_positive {
+node.bypassed_excitatory {
     size: 0.9gu;
     shape: rounded-box;
     fill-color: rgb(0, 255, 0);
