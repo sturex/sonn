@@ -1,5 +1,6 @@
 package vis;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.view.Viewer;
 import util.Util;
@@ -37,28 +38,38 @@ public class GraphStreamDynamicLayout implements NetworkLayout {
 
     @Override
     public void addEdge(LayoutEdge layoutEdge) {
-        org.graphstream.graph.Edge edge = graph.addEdge(getInnerNodeId(layoutEdge.getSourceId(), layoutEdge.getTargetId()),
+        org.graphstream.graph.Edge edge = graph.addEdge(getEdgeId(layoutEdge.getSourceId(), layoutEdge.getTargetId()),
                 String.valueOf(layoutEdge.getSourceId()),
                 String.valueOf(layoutEdge.getTargetId()), true);
         edge.setAttribute("ui.class", layoutEdge.getUiClass());
     }
 
     @Override
-    public void updateInnerNode(LayoutEdge layoutEdge) {
-
+    public void updateEdge(LayoutEdge layoutEdge) {
+        Edge edge = graph.getEdge(getEdgeId(layoutEdge.getSourceId(), layoutEdge.getTargetId()));
+        edge.setAttribute("ui.class", layoutEdge.getUiClass());
     }
 
     @Override
     public void updateInputNode(LayoutInputNode inputNode, boolean isEnlarged) {
-        //graph.getNode(String.valueOf(inputNode.getId())).setAttribute();
+        org.graphstream.graph.Node graphNode = graph.getNode(String.valueOf(inputNode.getId()));
+        graphNode.setAttribute("ui.size", isEnlarged ? "1.2gu" : "0.8gu");
     }
 
     @Override
     public void updateOutputNode(LayoutOutputNode outputNode, boolean isEnlarged) {
-
+        org.graphstream.graph.Node graphNode = graph.getNode(String.valueOf(outputNode.getId()));
+        String prefix = isEnlarged ? "bypassed" : "still";
+        graphNode.setAttribute("ui.class", prefix + "_" + outputNode.getUiClass());
+        graphNode.setAttribute("ui.size", isEnlarged ? "1.2gu" : "0.8gu");
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    private String getInnerNodeId(int sourceId, int targetId) {
+    private String getEdgeId(int sourceId, int targetId) {
         return "I_" + sourceId + "_" + targetId;
     }
 }

@@ -17,9 +17,18 @@ node.receptor {
     z-index: 0;
 }
 
-node.neuron {
+node.bypassed_neuron {
     size: 0.3gu;
-    fill-color: blue;
+    fill-color: green;
+    /*fill-color: blue;*/
+    text-mode: hidden;
+    z-index: 0;
+}
+
+node.still_neuron {
+    size: 0.3gu;
+    fill-color: red;
+    /*fill-color: blue;*/
     text-mode: hidden;
     z-index: 0;
 }
@@ -40,16 +49,16 @@ node.training_input {
 
 
 edge.still_inhibitory {
-    stroke-color: red;
-    fill-color: red;
+    stroke-color: rgb(255, 200, 200);
+    fill-color: rgb(255, 200, 200);
     stroke-width: 1px;
     stroke-mode: plain;
     z-index: 0;
 }
 
 edge.still_excitatory {
-    stroke-color: green;
-    fill-color: green;
+    stroke-color: rgb(200, 255, 200);
+    fill-color: rgb(200, 255, 200);
     stroke-width: 1px;
     stroke-mode: plain;
     z-index: 100;

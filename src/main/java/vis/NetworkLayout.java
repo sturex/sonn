@@ -10,7 +10,7 @@ public interface NetworkLayout {
 
     void addEdge(LayoutEdge layoutEdge);
 
-    void updateInnerNode(LayoutEdge layoutEdge);
+    void updateEdge(LayoutEdge layoutEdge);
 
     void updateInputNode(LayoutInputNode inputNode, boolean isEnlarged);
 

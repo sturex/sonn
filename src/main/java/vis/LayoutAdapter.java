@@ -28,7 +28,7 @@ public class LayoutAdapter implements NetworkEventsListener {
 
     @Override
     public void onSynapseStateChanged(Synapse<?, ?> synapse) {
-        layout.updateInnerNode(LayoutEdge.of(synapse));
+        layout.updateEdge(LayoutEdge.of(synapse));
     }
 
     @Override

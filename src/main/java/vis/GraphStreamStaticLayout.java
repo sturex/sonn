@@ -96,7 +96,7 @@ public class GraphStreamStaticLayout implements NetworkLayout {
     }
 
     @Override
-    public void updateInnerNode(LayoutEdge layoutEdge) {
+    public void updateEdge(LayoutEdge layoutEdge) {
         String id = getInnerNodeId(layoutEdge.getSourceId(), layoutEdge.getTargetId());
         Optional.ofNullable(graph.getNode(id))
                 .orElseThrow(() -> new RuntimeException("Not found inner node with id: " + id))
