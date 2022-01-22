@@ -52,9 +52,9 @@ this is why different squares opaqueness and circles sizes are happened.
 network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
 ```
 
-This is the basic graph representation with GraphStream's out-of-the-box dynamic layout. Note, the image below shows a very simple graph layout while complex ones are totally unreadable and useless. 
+Below is the basic example on how the network grows using GraphStream's out-of-the-box dynamic layout. Note, the animation shows a very simple graph layout while complex ones are totally unreadable and useless. 
 
-![Alt text](src/main/resources/git/scr2.jpg?raw=true "Dynamic layout")
+![Alt text](src/main/resources/git/dynlay.gif?raw=true "Dynamic layout")
 
 ## Current state and next steps
 
