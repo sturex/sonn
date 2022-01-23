@@ -1,19 +1,21 @@
 package playground;
 
 import neural.Network;
+import vis.GraphStreamDynamicLayout;
 import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class Playground {
+public class DeterminedQueuePlayground {
 
     public static void main(String[] args) throws InterruptedException {
 
         Network network = new Network(50);
 
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
+        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
 
         Queue<Boolean> queue = new ArrayDeque<>();
         queue.add(true); //1
