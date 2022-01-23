@@ -112,6 +112,14 @@ for (int idx = 0; idx < 20; idx++) {
 }
 ```
 
+## Suddenly some words on AGI philosophy I profess
+There is **_NO_** Intelligence in terms of condition we can measure. It's all about [natural selection](https://en.wikipedia.org/wiki/Natural_selection). 
+Nature just eliminates all the species which do not conform to current conditions. We just observe symptoms calling it Intelligence.  
+
+Everything that can accept _flow_ from outer environment then split it using itself inner structure and finally get it back to outer media is already intelligent. 
+The nature of the [flow](https://github.com/sturex/sonn/blob/master/src/main/java/core/Flow.java) is irrelevant. 
+It can be neurotransmitters and hormones or enumerated emotions each bounded to certain [Receptor](https://en.wikipedia.org/wiki/Sensory_neuron#Types_and_function) implemented in [Java code](https://github.com/sturex/sonn/blob/master/src/main/java/neural/Receptor.java).
+
 ## Contributing
 
 I doubt you can realize the underlying technology with no articles describing it.
