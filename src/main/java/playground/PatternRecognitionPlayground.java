@@ -3,7 +3,6 @@ package playground;
 import neural.Network;
 import util.patgen.Pattern;
 import util.patgen.PatternGenerator;
-import vis.GraphStreamDynamicLayout;
 import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
@@ -28,7 +27,7 @@ public class PatternRecognitionPlayground {
         Network network = new Network(maxNeuronSize);
 
         network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
-        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
+//        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
 
         for (int idx = 0; idx < patternGenerator.getSize(); idx++) {
             int channelIdx = idx;
