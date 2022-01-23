@@ -56,17 +56,35 @@ Below is the basic example on how the network grows using GraphStream's out-of-t
 
 [![Everything Is AWESOME](https://yt-embed.herokuapp.com/embed?v=a9dRjU2J7Ag)](https://youtu.be/a9dRjU2J7Ag "Self-Organizing Neural Network")
 
-## Current state and next steps
+## Project state 
+_Proof-of-concept, Single-threaded and Non-optimized_
 
-_Proof-of-concept, Single-threaded and Non-optimized._
+### Done
+- The original Self-organized Neural Network pet project rewritten from the scratch
+  - Abstract Nodes and Edges, Graph draft. Check the [Core package](https://github.com/sturex/sonn/tree/master/src/main/java/core)
+  - Concrete Receptor, Effector, Neuron (as hidden network unit) in [Neural package](https://github.com/sturex/sonn/tree/master/src/main/java/neural)
+- Network self-organized growing
+  - ⚠️Implemented an ugly workaround solution in core - should fix it
+- Different kinds of Receptor. See [Network code](https://github.com/sturex/sonn/blob/master/src/main/java/neural/Network.java)
+  - basic reception for any single Object
+  - reception for set of objects bounded to specific receptor (strict or dictionary)
+  - adaptive (auto-extensible, on-demand) reception
+  - floating point values bucketing
+- Event-driven Network visualization, see [Visualization package](https://github.com/sturex/sonn/tree/master/src/main/java/vis)
+  - Static layout (adjacency matrix)
+  - Dynamic layout (graph)
 
-- ✔️Rewriting the original Self-organized Neural Network pet project from the scratch
-- ✔️Fine-tuning core logic. ⚠️Implemented an ugly workaround solution in core - should fix it
-- ✔️Network grow implemented 
-- Reinforcement learning implementation
-- Working on real-world application samples
-  - ✔️[Outlier detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**. Sample code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/OutlierDetectionSample.java).
-  - Pattern recognition on **multivariate time-series** data with **noise**
+### In progress
+- [Associative memory](https://en.wikipedia.org/wiki/Associative_memory_(psychology)) formation using Effector 
+- Real-world application samples
+  - [Outlier detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**. Code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/OutlierDetectionSample.java).
+  - [Spatiotemporal](https://en.wikipedia.org/wiki/Spatiotemporal_pattern) Pattern recognition on **multivariate time-series** data with **noise**. Code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/PatternRecognitionSample.java)
+
+### ToDo
+- Wiki pages
+- Single pass Network training
+  - Supervised network constructing  
+  - Reinforcement learning
 
 ## How to start with it
 
@@ -94,3 +112,11 @@ for (int idx = 0; idx < 20; idx++) {
 }
 ```
 
+## Contributing
+
+I doubt you can realize the underlying technology with no articles describing it.
+So just hold tight and wait 😀
+
+## Contacts
+
+Feel free to join to my contacts via [LinkedIn](https://www.linkedin.com/in/sturex/) or [Facebook](https://www.facebook.com/fbsturex)
