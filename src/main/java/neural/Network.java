@@ -48,7 +48,7 @@ public class Network implements Graph {
         }
     }
 
-    public void resetState(){
+    public void resetState() {
         neurons.forEach(Neuron::resetState);
         receptors.forEach(Receptor::resetState);
     }
@@ -56,9 +56,9 @@ public class Network implements Graph {
     /**
      * Adds a reception for single object.
      *
-     * @param t object supplier
+     * @param t       object supplier
      * @param adapter transformation function from source supplier to supplier of booleans
-     * @param <T> type parameter bounded to Supplier
+     * @param <T>     type parameter bounded to Supplier
      * @return just created {@link Receptor} instance
      */
     public <T extends Supplier<?>> Receptor addReceptor(T t, Function<T, BooleanSupplier> adapter) {
@@ -68,12 +68,12 @@ public class Network implements Graph {
     /**
      * Adds a set of receptors for objects being supplied by supplier.
      *
-     * @param tSupplier object supplier
-     * @param u compound parameter to use in mapping function
-     * @param receptorCount buckets count
+     * @param tSupplier      object supplier
+     * @param u              compound parameter to use in mapping function
+     * @param receptorCount  buckets count
      * @param receptorMapper mapping function from object being provided by supplier and receptor index
-     * @param <T> type parameter
-     * @param <U> type parameter
+     * @param <T>            type parameter
+     * @param <U>            type parameter
      */
     public <T, U> void addReceptorField(Supplier<T> tSupplier, U u, int receptorCount, BiFunction<T, U, Integer> receptorMapper) {
         for (int i = 0; i < receptorCount; i++) {
@@ -88,7 +88,7 @@ public class Network implements Graph {
      * If the supplier supplies unknown object nothing will happen, no one receptor will be excited by the object.
      *
      * @param valueSupplier a channel by which objects are delivered to set of receptors
-     * @param dictionary a non-empty set with exact object values to be mapped to initial receptors
+     * @param dictionary    a non-empty set with exact object values to be mapped to initial receptors
      */
     public void addStrictDictReceptor(Supplier<Object> valueSupplier, Set<Object> dictionary) {
         AtomicInteger idx = new AtomicInteger();
@@ -108,7 +108,7 @@ public class Network implements Graph {
      * It is possible to call for method several times. Thus, several sets will be created, exactly one for every supplier.
      *
      * @param valueSupplier a channel by which objects are delivered to set of receptors
-     * @param dictionary a non-empty set with initial object values to be mapped to initial receptors
+     * @param dictionary    a non-empty set with initial object values to be mapped to initial receptors
      */
     public void addAdaptiveDictReceptor(Supplier<Object> valueSupplier, Set<Object> dictionary) {
         if (dictionary.isEmpty()) {
@@ -244,6 +244,7 @@ public class Network implements Graph {
     @Override
     public void onDeadendNodeFound(Node<?, ?> node) {
         assert !deadendNodes.contains(node) : timestamp + ": " + node.toString();
+        assert !(node instanceof Effector) : timestamp + ": " + node.toString();
         //TODO ugly non-optimal workaround solution
         if (node instanceof Neuron neuron) {
             neuron.streamOfInputs().forEach(synapse -> {
@@ -258,6 +259,7 @@ public class Network implements Graph {
     @Override
     public void onSidewayNodeFound(Node<?, ?> node) {
         assert !sidewayNodes.contains(node) : timestamp + ": " + node.toString();
+        assert !(node instanceof Effector) : timestamp + ": " + node.toString();
         sidewayNodes.add(node);
     }
 
