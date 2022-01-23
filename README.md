@@ -52,9 +52,9 @@ this is why different squares opaqueness and circles sizes are happened.
 network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
 ```
 
-Below is the basic example on how the network grows using GraphStream's out-of-the-box dynamic layout. Note, the animation shows a very simple graph layout while complex ones are totally unreadable and useless. 
+Below is the basic example on how the network grows using GraphStream's out-of-the-box dynamic layout. Note, the recording shows a very simple graph layout while complex ones are totally unreadable and useless. 
 
-![Alt text](src/main/resources/git/dynlay.gif?raw=true "Dynamic layout")
+[![Everything Is AWESOME](https://yt-embed.herokuapp.com/embed?v=a9dRjU2J7Ag)](https://youtu.be/a9dRjU2J7Ag "Self-Organizing Neural Network")
 
 ## Current state and next steps
 
@@ -67,7 +67,6 @@ _Proof-of-concept, Single-threaded and Non-optimized._
 - Working on real-world application samples
   - ✔️[Outlier detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**. Sample code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/OutlierDetectionSample.java).
   - Pattern recognition on **multivariate time-series** data with **noise**
-
 
 ## How to start with it
 
