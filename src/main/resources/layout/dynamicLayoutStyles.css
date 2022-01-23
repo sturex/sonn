@@ -2,27 +2,28 @@ node {
     size: 0.3gu;
     fill-color: blue;
     text-mode: hidden;
-    z-index: 0;
+    z-index: 1000;
 }
 
 edge {
     shape: line;
-    arrow-size: 5px, 2px;
+    arrow-size: 0px, 0px;
 }
 
 node.receptor {
-    size: 0.3gu;
+    size: 0.6gu;
+    stroke-mode: plain;
+    stroke-color: black;
     fill-color: yellow;
     text-mode: hidden;
-    z-index: 0;
+    z-index: 10000;
 }
 
 node.bypassed_neuron {
-    size: 0.3gu;
+    size: 0.4gu;
     fill-color: green;
     /*fill-color: blue;*/
     text-mode: hidden;
-    z-index: 0;
 }
 
 node.still_neuron {
@@ -30,21 +31,16 @@ node.still_neuron {
     fill-color: red;
     /*fill-color: blue;*/
     text-mode: hidden;
-    z-index: 0;
 }
 
 node.effector {
-    size: 0.3gu;
     fill-color: cyan;
     text-mode: hidden;
-    z-index: 0;
 }
 
 node.training_input {
-    size: 0.3gu;
     fill-color: black;
     text-mode: hidden;
-    z-index: 0;
 }
 
 
@@ -53,7 +49,7 @@ edge.still_inhibitory {
     fill-color: rgb(255, 200, 200);
     stroke-width: 1px;
     stroke-mode: plain;
-    z-index: 0;
+    z-index: 100;
 }
 
 edge.still_excitatory {
@@ -69,7 +65,7 @@ edge.bypassed_inhibitory {
     fill-color: red;
     stroke-width: 1px;
     stroke-mode: plain;
-    z-index: 0;
+    z-index: 100;
 }
 
 edge.bypassed_excitatory {

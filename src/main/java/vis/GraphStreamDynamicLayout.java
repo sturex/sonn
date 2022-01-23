@@ -62,6 +62,11 @@ public class GraphStreamDynamicLayout implements NetworkLayout {
         String prefix = isEnlarged ? "bypassed" : "still";
         graphNode.setAttribute("ui.class", prefix + "_" + outputNode.getUiClass());
         graphNode.setAttribute("ui.size", isEnlarged ? "1.2gu" : "0.8gu");
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getEdgeId(int sourceId, int targetId) {
