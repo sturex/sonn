@@ -22,7 +22,7 @@ public class TextOutlierDetectionSample {
 
         StringBuilder sb = new StringBuilder();
 
-        String sourceText = Util.readAsString("data/txtru.txt");
+        String sourceText = Util.readAsString("data/lorem_ipsum.txt");
 //                "This test will be written in network structure";
 
         Queue<Character> text = sourceText.chars().mapToObj(c -> (char) c).collect(Collectors.toCollection(ArrayDeque::new));
