@@ -56,40 +56,49 @@ Below is the basic example on how the network grows using GraphStream's out-of-t
 
 [![Everything Is AWESOME](https://yt-embed.herokuapp.com/embed?v=a9dRjU2J7Ag)](https://youtu.be/a9dRjU2J7Ag "Self-Organizing Neural Network")
 
-## Project state 
-_Proof-of-concept, Single-threaded and Non-optimized_
+## Project state
+Proof-of-concept, Single-threaded, Non-optimized, Ugly sometimes
+
+
+## Board
+Next milestone: **Reinforcement learning and associative formation are fine-tuned**
 
 ### Done
 - The original Self-organized Neural Network pet project rewritten from the scratch
   - Abstract Nodes and Edges, Graph draft. Check the [Core package](https://github.com/sturex/sonn/tree/master/src/main/java/core)
-  - Concrete Receptor, Effector, Neuron (as hidden network unit) in [Neural package](https://github.com/sturex/sonn/tree/master/src/main/java/neural)
+  - Concrete Receptor, Effector, PainEffector, Neuron (aka hidden network unit) in [Neural package](https://github.com/sturex/sonn/tree/master/src/main/java/neural)
 - Network self-organized growing
   - ⚠️Implemented an ugly workaround solution in core - should fix it
+- [Associative memory](https://en.wikipedia.org/wiki/Associative_memory_(psychology)) formation using bio-inspired Reflexes.
 - Different kinds of Receptor. See [Network code](https://github.com/sturex/sonn/blob/master/src/main/java/neural/Network.java)
   - basic reception for any single Object
   - reception for set of objects bounded to specific receptor (strict or dictionary)
   - adaptive (auto-extensible, on-demand) reception
   - floating point values bucketing
+- [PainEffector](https://github.com/sturex/sonn/blob/master/src/main/java/neural/PainEffector.java) as core mechanism to [Reinforcement Learning paradigm](https://en.wikipedia.org/wiki/Reinforcement_learning) implementation 
 - Event-driven Network visualization, see [Visualization package](https://github.com/sturex/sonn/tree/master/src/main/java/vis)
   - Static layout (adjacency matrix)
-  - Dynamic layout (graph)
-
-### In progress
-- [Associative memory](https://en.wikipedia.org/wiki/Associative_memory_(psychology)) formation using Effector 
+  - Dynamic layout (graph) supporting events from every subclass of Node 
 - Real-world application samples
   - [Outlier detection](https://en.wikipedia.org/wiki/Anomaly_detection) on **multivariate data**. Code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/OutlierDetectionSample.java).
   - [Spatiotemporal](https://en.wikipedia.org/wiki/Spatiotemporal_pattern) Pattern recognition on **multivariate time-series** data with **noise**. Code is [here](https://github.com/sturex/sonn/blob/master/src/main/java/samples/PatternRecognitionSample.java)
 
+### In progress
+
+- Playground and Samples for
+  - [Associative memory](https://en.wikipedia.org/wiki/Associative_memory_(psychology)) formation
+  - Reinforcement learning
+- Single pass Network (continuous) training
+  - Supervised network constructing
+
 ### ToDo
 - Wiki pages
-- Single pass Network training
-  - Supervised network constructing  
-  - Reinforcement learning
+- Add samples covering most of Real-world applications
 
 ## How to start with it
 
 - Clone the project. Open it in your favorite IDE.
-- Start exploring [Playground package](https://github.com/sturex/sonn/tree/master/src/main/java/playground).
+- Start exploring [Playground package](https://github.com/sturex/sonn/tree/master/src/main/java/playground) or [Samples package](https://github.com/sturex/sonn/tree/master/src/main/java/samples)
 - or create your own class with main method with contents as below
 
 
