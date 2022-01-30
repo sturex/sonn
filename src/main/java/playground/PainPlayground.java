@@ -8,25 +8,26 @@ import vis.LayoutAdapter;
 
 import java.util.List;
 import java.util.Random;
-import java.util.function.BooleanSupplier;
 
-public class RandGrowNetwork {
+public class PainPlayground {
 
-    private static final Random random = new Random();
-    private static int i = 0;
-    private static final BooleanSupplier bs = () -> i++ == 0 || random.nextInt(100) > 50;
+    static int idx = 0;
 
     public static void main(String[] args) throws InterruptedException {
 
+        Random random = new Random();
         List<NetworkEventsListener> listeners = List.of(
                 new LayoutAdapter(new GraphStreamStaticLayout()),
                 new LayoutAdapter(new GraphStreamDynamicLayout()));
-        Network network = new Network(listeners, 100);
+        Network network = new Network(listeners, 400);
 
-        network.addReceptor(bs);
+        network.addReflex(() -> random.nextInt(100) > 55, () -> System.out.println(idx++));
+        network.addReceptor(() -> random.nextInt(100) > 95);
+        network.addReceptor(() -> random.nextInt(100) > 95);
+        network.addPainReceptor(() -> random.nextInt(100) > 90);
 
-        for (int idx = 0; idx < 200; idx++) {
-            System.out.print(idx + ": ");
+        while (true) {
+            System.out.println("--------------------------------------------------------------------------------");
             network.tick();
             Thread.sleep(200);
         }

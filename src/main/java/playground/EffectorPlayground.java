@@ -1,10 +1,12 @@
 package playground;
 
 import neural.Network;
+import neural.NetworkEventsListener;
 import vis.GraphStreamDynamicLayout;
 import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
+import java.util.List;
 import java.util.Random;
 
 public class EffectorPlayground {
@@ -15,10 +17,11 @@ public class EffectorPlayground {
     static int idx = 0;
 
     public static void main(String[] args) throws InterruptedException {
-        Network network = new Network(maxNeuronSize);
 
-        network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
-        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
+        List<NetworkEventsListener> listeners = List.of(
+                new LayoutAdapter(new GraphStreamStaticLayout()),
+                new LayoutAdapter(new GraphStreamDynamicLayout()));
+        Network network = new Network(listeners, maxNeuronSize);
 
         network.addReflex(() -> b, () -> System.out.println(idx + ": " + b));
 

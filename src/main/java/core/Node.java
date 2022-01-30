@@ -18,7 +18,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     //TODO very ugly solution
     private boolean isParent = false;
 
-    public void setParent(){
+    public void setParent() {
         isParent = true;
     }
 
@@ -73,6 +73,10 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
         return forwardFlow == Flow.RUN;
     }
 
+    public boolean isBackwardRun() {
+        return backwardFlow == Flow.RUN;
+    }
+
     private boolean isDeadend() {
         return forwardFlow == Flow.RUN && backwardFlow == Flow.STILL;
     }
@@ -106,13 +110,19 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
                 onDeadendFound();
             } else if (isSideway()) {
                 onSidewayFound();
+            } else if (isForwardRun() && isBackwardRun()) {
+                onRunFound();
             }
         }
-        assert inputSize() != 0 : toString();
+//        assert inputSize() != 0 : toString();
         inputs.forEach(input -> input.acceptBackward(forwardFlow));
     }
 
-    private void onDeadendFound() {
+    protected void onRunFound() {
+
+    }
+
+    protected void onDeadendFound() {
         graph.onDeadendNodeFound(this);
     }
 

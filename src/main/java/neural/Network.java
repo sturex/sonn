@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Network implements Graph {
 
@@ -15,17 +16,34 @@ public class Network implements Graph {
     private final List<Receptor> receptors = new ArrayList<>();
     private final List<Receptor> addedReceptors = new ArrayList<>();
     private final List<Effector> effectors = new ArrayList<>();
+    private final List<Effector> runEffectors = new ArrayList<>();
+    private final List<Effector> punishedEffectors = new ArrayList<>();
     private final List<Neuron> neurons = new ArrayList<>();
     private final List<Node<?, ?>> deadendNodes = new ArrayList<>();
     private final List<Node<?, ?>> sidewayNodes = new ArrayList<>();
     private final List<Node<?, ?>> leafNodes = new ArrayList<>();
-    private final List<NetworkEventsListener> listeners = new ArrayList<>();
+    private final List<NetworkEventsListener> listeners;
     private int timestamp = 0;
     Neuron targetNeuron = null;
     private final int maxNeuronSize;
+    private final PainEffector painEffector;
+
+    public Network(List<NetworkEventsListener> listeners, int maxNeuronSize) {
+        this.listeners = listeners;
+        this.maxNeuronSize = maxNeuronSize;
+        painEffector = addPainEffector();
+    }
 
     public Network(int maxNeuronSize) {
+        this.listeners = new ArrayList<>();
         this.maxNeuronSize = maxNeuronSize;
+        painEffector = addPainEffector();
+    }
+
+    private PainEffector addPainEffector() {
+        PainEffector painEffector = new PainEffector(this);
+        listeners.forEach(l -> l.onPainEffectorAdded(painEffector));
+        return painEffector;
     }
 
     static Flow convergeForward(List<? extends Synapse<?, ?>> synapses) {
@@ -40,12 +58,16 @@ public class Network implements Graph {
     }
 
     static Flow convergeBackward(List<? extends Synapse<?, ?>> synapses) {
-        assert synapses.isEmpty() || synapses.stream().anyMatch(s -> s.getType() == Synapse.Type.EXCITATORY);
+//        assert synapses.isEmpty() || synapses.stream().anyMatch(s -> s.getType() == Synapse.Type.EXCITATORY);
         if (synapses.stream().anyMatch(s -> s.getBackward() == Flow.RUN && s.getType() == Synapse.Type.EXCITATORY)) {
             return Flow.RUN;
         } else {
             return Flow.STILL;
         }
+    }
+
+    public Stream<Effector> streamOfEffectors() {
+        return effectors.stream();
     }
 
     public void resetState() {
@@ -151,10 +173,6 @@ public class Network implements Graph {
         timestamp++;
     }
 
-    public void addListener(NetworkEventsListener listener) {
-        listeners.add(Objects.requireNonNull(listener));
-    }
-
     public Receptor addReceptor(BooleanSupplier booleanSupplier) {
         Receptor receptor = new Receptor(this, Objects.requireNonNull(booleanSupplier));
         addedReceptors.add(receptor);
@@ -173,6 +191,13 @@ public class Network implements Graph {
         Receptor receptor = addReceptor(booleanSupplier);
         Effector effector = addEffector(runnable);
         connect(receptor, effector, Synapse.Type.EXCITATORY);
+        receptor.streamOfOutputs().forEach(Synapse::resetState);
+    }
+
+    public void addPainReceptor(BooleanSupplier booleanSupplier) {
+        Receptor receptor = addReceptor(booleanSupplier);
+        connect(receptor, painEffector, Synapse.Type.EXCITATORY);
+        receptor.streamOfOutputs().forEach(Synapse::resetState);
     }
 
     private Neuron addNeuron() {
@@ -210,12 +235,14 @@ public class Network implements Graph {
                 neuron.streamOfOutputs().forEach(l::onSynapseStateChanged);
             }
             effectors.forEach(l::onEffectorStateChanged);
+            l.onPainEffectorStateChanged(painEffector);
         });
     }
 
     private void backwardPass() {
         effectors.forEach(Node::triggerBackpass);
         leafNodes.forEach(Node::triggerBackpass);
+        painEffector.triggerBackpass();
         leafNodes.clear();
     }
 
@@ -224,13 +251,17 @@ public class Network implements Graph {
     }
 
     private void createNewConnections() {
-        if (neurons.size() < maxNeuronSize) {
+        if (!deadendNodes.isEmpty() && neurons.size() < maxNeuronSize) {
             targetNeuron = addNeuron();
             deadendNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.EXCITATORY));
             sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
+            runEffectors.forEach(d -> connect(targetNeuron, d, Synapse.Type.EXCITATORY));
+            punishedEffectors.forEach(d -> connect(targetNeuron, d, Synapse.Type.INHIBITORY));
         }
         deadendNodes.clear();
         sidewayNodes.clear();
+        runEffectors.clear();
+        punishedEffectors.clear();
     }
 
     private void connect(Node source, Node target, Synapse.Type type) {
@@ -239,6 +270,14 @@ public class Network implements Graph {
         source.addOutput(synapse);
         target.addInput(synapse);
         listeners.forEach(l -> l.onSynapseAdded(synapse));
+    }
+
+    public void onRunEffectorFound(Effector effector) {
+        runEffectors.add(effector);
+    }
+
+    public void onPunishedEffectorFound(Effector effector) {
+        punishedEffectors.add(effector);
     }
 
     @Override
@@ -281,6 +320,7 @@ public class Network implements Graph {
     }
 
     public int getNodesCount() {
-        return neurons.size() + receptors.size() + addedReceptors.size() + effectors.size();
+        int cnt = Optional.ofNullable(painEffector).isPresent() ? 1 : 0;
+        return neurons.size() + receptors.size() + addedReceptors.size() + effectors.size() + cnt;
     }
 }

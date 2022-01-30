@@ -23,4 +23,8 @@ public interface NetworkEventsListener {
     default void onSynapseAdded(Synapse<?, ?> synapse){}
 
     default void onDeadendNodesDetected(List<Node<?, ?>> deadendNodes, int maxDeadendNeuronCount){}
+
+    default void onPainEffectorAdded(PainEffector painEffector){}
+
+    default void onPainEffectorStateChanged(PainEffector painEffector){}
 }

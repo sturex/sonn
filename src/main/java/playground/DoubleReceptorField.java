@@ -2,9 +2,12 @@ package playground;
 
 import neural.Bounds;
 import neural.Network;
+import neural.NetworkEventsListener;
 import vis.GraphStreamDynamicLayout;
+import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
+import java.util.List;
 import java.util.Random;
 
 public class DoubleReceptorField {
@@ -17,10 +20,12 @@ public class DoubleReceptorField {
     private static final int maxNeuronSize = 100;
 
     public static void main(String[] args) throws InterruptedException {
-        Network network = new Network(maxNeuronSize);
 
-//        network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
-        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
+        List<NetworkEventsListener> listeners = List.of(
+                new LayoutAdapter(new GraphStreamStaticLayout()),
+                new LayoutAdapter(new GraphStreamDynamicLayout()));
+
+        Network network = new Network(listeners, maxNeuronSize);
 
         network.addDoubleReception(() -> d, new Bounds(lowerBound, upperBound), bCount);
 

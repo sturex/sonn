@@ -1,12 +1,15 @@
 package playground;
 
 import neural.Network;
+import neural.NetworkEventsListener;
 import util.patgen.Pattern;
 import util.patgen.PatternGenerator;
+import vis.GraphStreamDynamicLayout;
 import vis.GraphStreamStaticLayout;
 import vis.LayoutAdapter;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class PatternRecognitionPlayground {
@@ -24,10 +27,9 @@ public class PatternRecognitionPlayground {
                 .withProbability(1)
                 .build();
 
-        Network network = new Network(maxNeuronSize);
-
-        network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
-//        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
+        List<NetworkEventsListener> listeners = List.of(new LayoutAdapter(new GraphStreamStaticLayout()),
+                new LayoutAdapter(new GraphStreamDynamicLayout()));
+        Network network = new Network(listeners, maxNeuronSize);
 
         for (int idx = 0; idx < patternGenerator.getSize(); idx++) {
             int channelIdx = idx;

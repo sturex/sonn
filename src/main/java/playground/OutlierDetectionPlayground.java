@@ -28,12 +28,7 @@ public class OutlierDetectionPlayground {
         StringBuilder sb = new StringBuilder();
         double[][] trafficData = Util.readAsDoubleArray(Path.of("src/main/resources/data/traffic.csv"), delimiter);
 
-        Network network = new Network(maxNeuronSize);
-
-//        network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
-//        network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
-
-        network.addListener(new NetworkEventsListener() {
+        List<NetworkEventsListener> listeners = List.of(new NetworkEventsListener() {
             @Override
             public void onDeadendNodesDetected(List<Node<?, ?>> deadendNodes, int maxDeadendNeuronCount) {
                 List<Node<?, ?>> nodes = deadendNodes.stream().sorted(Comparator.comparingInt(Node::getId)).collect(Collectors.toList());
@@ -45,6 +40,8 @@ public class OutlierDetectionPlayground {
                         .append(deadendNodes.stream().map(n -> String.valueOf(n.getId())).sorted().collect(Collectors.joining(delimiter)));
             }
         });
+
+        Network network = new Network(listeners, maxNeuronSize);
 
         network.addDoubleReception(() -> trafficData[tdidx][0], bounds, bCount);
         network.addDoubleReception(() -> trafficData[tdidx][1], bounds, bCount);

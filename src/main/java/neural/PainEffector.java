@@ -5,18 +5,18 @@ import core.Node;
 
 import java.util.List;
 
-public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
+public class PainEffector extends Node<Synapse<Neuron, PainEffector>, Action> {
 
-    private final Network network;
-
-    Effector(Network network, Runnable runnable) {
+    public PainEffector(Network network) {
         super(network, network.getNodesCount());
-        this.network = network;
-        addOutput(new Action(runnable));
+        addOutput(new Action(() -> network.streamOfEffectors()
+                .filter(Node::isForwardRun)
+                .forEach(e -> e.streamOfOutputs()
+                        .forEach(a -> a.setBackwardFlow(Flow.STILL)))));
     }
 
     @Override
-    public Flow convergeForward(List<Synapse<Neuron, Effector>> ts) {
+    public Flow convergeForward(List<Synapse<Neuron, PainEffector>> ts) {
         return Network.convergeForward(ts);
     }
 
@@ -27,18 +27,16 @@ public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
 
     @Override
     public String toString() {
-        return "E" + super.toString();
+        return "HE" + super.toString();
     }
 
     @Override
     protected void onRunFound() {
-        network.onRunEffectorFound(this);
-    }
 
+    }
 
     @Override
     protected void onDeadendFound() {
-        network.onPunishedEffectorFound(this);
-        setForwardFlow(Flow.STILL);
+
     }
 }

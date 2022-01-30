@@ -10,32 +10,62 @@ edge {
     arrow-size: 0px, 0px;
 }
 
-node.receptor {
+node.bypassed_receptor {
     size: 0.6gu;
     stroke-mode: plain;
     stroke-color: black;
     fill-color: yellow;
-    text-mode: hidden;
+    z-index: 10000;
+}
+
+node.still_receptor {
+    size: 0.4gu;
+    stroke-mode: plain;
+    stroke-color: black;
+    fill-color: yellow;
     z-index: 10000;
 }
 
 node.bypassed_neuron {
     size: 0.4gu;
     fill-color: green;
-    /*fill-color: blue;*/
-    text-mode: hidden;
 }
 
 node.still_neuron {
     size: 0.3gu;
     fill-color: red;
-    /*fill-color: blue;*/
-    text-mode: hidden;
 }
 
-node.effector {
+node.bypassed_effector {
+    size: 0.6gu;
+    stroke-mode: plain;
+    stroke-color: green;
     fill-color: cyan;
-    text-mode: hidden;
+    z-index: 10000;
+}
+
+node.still_effector {
+    size: 0.4gu;
+    stroke-mode: plain;
+    stroke-color: red;
+    fill-color: cyan;
+    z-index: 10000;
+}
+
+node.bypassed_paineffector {
+    size: 0.6gu;
+    stroke-mode: plain;
+    stroke-color: #000000;
+    fill-color: magenta;
+    z-index: 10000;
+}
+
+node.still_paineffector {
+    size: 0.4gu;
+    stroke-mode: plain;
+    stroke-color: #000000;
+    fill-color: magenta;
+    z-index: 10000;
 }
 
 node.training_input {

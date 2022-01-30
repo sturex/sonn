@@ -4,6 +4,7 @@ import core.Node;
 import neural.Network;
 import neural.NetworkEventsListener;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -14,13 +15,12 @@ public class NeuralPatternDetector implements PatternDetector {
     private int[] patternIds;
 
     public NeuralPatternDetector(int maxNeuronSize) {
-        network = new Network(maxNeuronSize);
-        network.addListener(new NetworkEventsListener() {
+        network = new Network(Collections.singletonList(new NetworkEventsListener() {
             @Override
             public void onDeadendNodesDetected(List<Node<?, ?>> deadendNodes, int maxDeadendNeuronCount) {
                 patternIds = deadendNodes.stream().mapToInt(Node::getId).sorted().toArray();
             }
-        });
+        }), maxNeuronSize);
     }
 
     @Override
