@@ -21,7 +21,8 @@ While the core logic certainly will have few SLOC the abilities are expected to 
 | [Self-organization](https://en.wikipedia.org/wiki/Self-organization) | [Local rules](https://en.wikipedia.org/wiki/Cellular_automaton) only are applied while the network grows. |
 | [Reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning) | No supervisor at all. True [Black Box abstraction](https://en.wikipedia.org/wiki/Black_box). |
 | Structural adaptation | The network adjusts its structure adapting to the input signals. |
-| Mathless approach | There is no math at all used in algorithms on network grow. |
+| [Associative memory](https://en.wikipedia.org/wiki/Associative_memory_(psychology)) | The network use [biologically inspired Reflexes](https://en.wikipedia.org/wiki/Reflex) for forming of Associations. |
+| [Mathless approach](https://en.wikipedia.org/wiki/Formal_system) | There is no math at all used in algorithms on network grow. |
 
 ### Potential applications:
 
