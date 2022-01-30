@@ -34,11 +34,15 @@ Visualization is aimed mostly for development and showcase purposes.
 
 Green color is for **Excitatory** synapses, Red color for **Inhibitory** ones. 
 
-### Static layout can be applied as follows
+Static and Dynamic layouts can be applied as follows
 
 ``` java 
-network.addListener(new LayoutAdapter(new GraphStreamStaticLayout()));
+List<NetworkEventsListener> listeners = List.of(
+        new LayoutAdapter(new GraphStreamStaticLayout()),
+        new LayoutAdapter(new GraphStreamDynamicLayout()));
+Network network = new Network(listeners, 400);
 ```
+### Static layout
 It just an adjacency matrix of underlying directed graph. The **Flow** (core concept expression) passes from bottom to left side of matrix. 
 The circles are neurons aka nodes. The squares stay for edges.
 Static layout has an event-based methods for to react to Flow bypassing through nodes and edges - 
@@ -46,11 +50,7 @@ this is why different squares opaqueness and circles sizes are happened.
 
 ![Alt text](src/main/resources/git/scr1.jpg?raw=true "Static layout")
 
-### Dynamic layout can be applied as follows
-
-``` java 
-network.addListener(new LayoutAdapter(new GraphStreamDynamicLayout()));
-```
+### Dynamic layout
 
 Below is the basic example on how the network grows using GraphStream's out-of-the-box dynamic layout. Note, the recording shows a very simple graph layout while complex ones are totally unreadable and useless. 
 
