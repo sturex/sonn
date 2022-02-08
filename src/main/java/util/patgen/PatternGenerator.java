@@ -1,6 +1,7 @@
 package util.patgen;
 
 import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
@@ -53,14 +54,13 @@ public class PatternGenerator implements Iterable<int[]> {
                     return generateRandomIntegerArray();
                 } else if (iterator == null || !iterator.hasNext()) {
                     if (random.nextDouble() < probability) {
-                        double testProportion = random.nextDouble();
-                        for (Triple<Pattern, Double, Double> triple : pats) {
-                            iterator = triple.getLeft().iterator();
-                            fuzzyIndex = triple.getRight();
-                            if (testProportion > triple.getMiddle()) {
-                                break;
-                            }
-                        }
+                        MutableTriple<Pattern, Double, Double> mutableTriple = pats.stream()
+                                .map(pat -> Pair.of(pat, pat.getMiddle() * random.nextDouble()))
+                                .max(Comparator.comparingDouble(Pair::getRight))
+                                .orElseThrow()
+                                .getLeft();
+                        iterator = mutableTriple.getLeft().iterator();
+                        fuzzyIndex = mutableTriple.getRight();
                     }
                 }
                 if (iterator != null && iterator.hasNext()) {
