@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OutlierDetectionPlayground {
-    private static final int lowerBound = -100;
-    private static final int upperBound = 100;
+    private static final int lowerBound = -2;
+    private static final int upperBound = 3;
     public static final Bounds bounds = new Bounds(lowerBound, upperBound);
     private static final int bCount = 100;
-    private static final int maxNeuronSize = 2000;
+    private static final int maxNeuronSize = 500;
     public static final String delimiter = ";";
-    private static int tdidx = 0;
+    private static int colidx = 0;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
         StringBuilder sb = new StringBuilder();
-        double[][] trafficData = Util.readAsDoubleArray(Path.of("src/main/resources/data/traffic.csv"), delimiter);
+        double[][] ecgData = Util.readAsDoubleArray(Path.of("src/main/resources/data/ecg_edit.csv"), delimiter);
 
         List<NetworkEventsListener> listeners = List.of(new NetworkEventsListener() {
             @Override
@@ -34,30 +34,30 @@ public class OutlierDetectionPlayground {
                 List<Node<?, ?>> nodes = deadendNodes.stream().sorted(Comparator.comparingInt(Node::getId)).collect(Collectors.toList());
                 double average = deadendNodes.stream().mapToInt(Node::getId).summaryStatistics().getAverage();
                 sb
+                        .append(average).append(delimiter)
                         .append(1. - (double) nodes.get(nodes.size() - 1).getId() / (double) maxDeadendNeuronCount).append(delimiter)
                         .append(1. - average / (double) maxDeadendNeuronCount).append(delimiter)
-                        .append(maxDeadendNeuronCount).append(delimiter)
+//                        .append(maxDeadendNeuronCount).append(delimiter)
                         .append(deadendNodes.stream().map(n -> String.valueOf(n.getId())).sorted().collect(Collectors.joining(delimiter)));
             }
         });
 
         Network network = new Network(listeners, maxNeuronSize);
 
-        network.addDoubleReception(() -> trafficData[tdidx][0], bounds, bCount);
-        network.addDoubleReception(() -> trafficData[tdidx][1], bounds, bCount);
-        network.addDoubleReception(() -> trafficData[tdidx][2], bounds, bCount);
+        network.addDoubleReception(() -> ecgData[colidx][0], bounds, bCount);
+//        network.addDoubleReception(() -> ecgData[colidx][1], bounds, bCount);
 
-        while (tdidx < trafficData.length - 1 && tdidx < 5000) {
-            tdidx++;
-            sb.append(tdidx).append(delimiter);
-            sb.append(Arrays.stream(trafficData[tdidx]).mapToObj(String::valueOf).collect(Collectors.joining(delimiter))).append(delimiter);
+        while (colidx < ecgData.length - 1 && colidx < 10000) {
+            colidx++;
+            sb.append(colidx).append(delimiter);
+            sb.append(Arrays.stream(ecgData[colidx]).mapToObj(String::valueOf).collect(Collectors.joining(delimiter))).append(delimiter);
             network.tick();
             sb.append("\n");
-            System.out.println(tdidx);
+            System.out.println(colidx);
 //            Thread.sleep(300);
         }
 
-        Files.write(Path.of("src/main/resources/logs/traffic_output.csv"), sb.toString().getBytes());
+        Files.write(Path.of("src/main/resources/logs/ecg_output.csv"), sb.toString().getBytes());
     }
 
 }

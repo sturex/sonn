@@ -7,6 +7,7 @@ import java.util.function.BooleanSupplier;
 
 public class Reception implements FlowSupplier {
     private final BooleanSupplier booleanSupplier;
+    private Flow flow;
 
     public Reception(BooleanSupplier booleanSupplier) {
         this.booleanSupplier = booleanSupplier;
@@ -19,6 +20,7 @@ public class Reception implements FlowSupplier {
 
     @Override
     public Flow getForward() {
-        return Flow.from(booleanSupplier);
+        flow = Flow.from(booleanSupplier);
+        return flow;
     }
 }

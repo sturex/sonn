@@ -5,7 +5,6 @@ import neural.Reception;
 
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.stream.Stream;
 
 public enum Flow {
     RUN, STILL;
@@ -34,5 +33,9 @@ public enum Flow {
 
     public Flow inverted(){
         return this == RUN ? STILL : RUN;
+    }
+
+    public boolean toBoolean(){
+        return this == RUN;
     }
 }

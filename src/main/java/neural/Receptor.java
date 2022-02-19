@@ -13,6 +13,7 @@ public class Receptor extends Node<Reception, Synapse<Receptor, Neuron>> {
         addInput(new Reception(booleanSupplier));
     }
 
+
     @Override
     public Flow convergeForward(List<Reception> ts) {
         return Flow.convergeForward(ts);

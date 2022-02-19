@@ -18,9 +18,13 @@ public class Synapse<T extends Node<?, ?>, U extends Node<?, ?>> extends Edge<T,
     Synapse(T input, U output, Type type) {
         super(input, output);
         this.type = type;
-        if (type == Type.EXCITATORY) {
-            setForwardFlow(Flow.RUN);
-        }
+    }
+
+    Synapse(T input, U output, Type type, Flow forwardFlow, Flow backwardFlow) {
+        super(input, output);
+        this.type = type;
+        setForwardFlow(forwardFlow);
+        setBackwardFlow(backwardFlow);
     }
 
     @Override

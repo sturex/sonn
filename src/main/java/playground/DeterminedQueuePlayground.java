@@ -9,36 +9,56 @@ import vis.LayoutAdapter;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 public class DeterminedQueuePlayground {
 
     static int idx = 0;
+
     public static void main(String[] args) throws InterruptedException {
 
         List<NetworkEventsListener> listeners = List.of(
                 new LayoutAdapter(new GraphStreamStaticLayout()),
                 new LayoutAdapter(new GraphStreamDynamicLayout()));
 
-        Network network = new Network(listeners, 10);
+        Network network = new Network(listeners, 100);
 
-        Queue<Boolean> queue = new ArrayDeque<>();
-        queue.add(true); //1
-        queue.add(false);//2
-        queue.add(true); //3
-        queue.add(true); //4
-        queue.add(false);//5
-        queue.add(true); //6
-        queue.add(false);//7
-        queue.add(true); //8
+        Queue<Integer> rQueue = new ArrayDeque<>();
+        Queue<Integer> hQueue = new ArrayDeque<>();
+        rQueue.add(1); //1
+        rQueue.add(0);//2
+        rQueue.add(1); //3
+        rQueue.add(1); //4
+        rQueue.add(0);//5
+        rQueue.add(1); //6
+        rQueue.add(0);//7
+        rQueue.add(1); //8
+
+        hQueue.add(1); //1
+        hQueue.add(0);//2
+        hQueue.add(0); //3
+        hQueue.add(0); //4
+        hQueue.add(1);//5
+        hQueue.add(0); //6
+        hQueue.add(0);//7
+        hQueue.add(0); //8
+
+        Random random = new Random();
 
         network.addReflex(() -> {
-            boolean poll = queue.poll();
-            queue.add(poll);
-            return poll;
-        }, () -> System.out.println(idx++));
+            if (!rQueue.isEmpty()) {
+                return rQueue.poll() != 0;
+            } else return random.nextBoolean();
+        }, () -> System.out.println(idx));
+//        network.addReceptor(() -> rQueue.poll() != 0);
+        network.addPainReceptor(() -> {
+            if (!hQueue.isEmpty()) {
+                return hQueue.poll() != 0;
+            } else return false;
+        });
 
-        while (true){
-            System.out.print("tick: ");
+        while (true) {
+            System.out.println("idx: " + idx++);
             network.tick();
             Thread.sleep(200);
         }

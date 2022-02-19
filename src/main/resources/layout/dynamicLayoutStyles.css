@@ -7,6 +7,9 @@ node {
 
 edge {
     shape: line;
+    stroke-width: 1px;
+    stroke-mode: plain;
+    z-index: 100;
     arrow-size: 0px, 0px;
 }
 
@@ -77,31 +80,19 @@ node.training_input {
 edge.still_inhibitory {
     stroke-color: rgb(255, 200, 200);
     fill-color: rgb(255, 200, 200);
-    stroke-width: 1px;
-    stroke-mode: plain;
-    z-index: 100;
 }
 
 edge.still_excitatory {
     stroke-color: rgb(200, 255, 200);
     fill-color: rgb(200, 255, 200);
-    stroke-width: 1px;
-    stroke-mode: plain;
-    z-index: 100;
 }
 
 edge.bypassed_inhibitory {
     stroke-color: red;
     fill-color: red;
-    stroke-width: 1px;
-    stroke-mode: plain;
-    z-index: 100;
 }
 
 edge.bypassed_excitatory {
     stroke-color: green;
     fill-color: green;
-    stroke-width: 1px;
-    stroke-mode: plain;
-    z-index: 100;
 }

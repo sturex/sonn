@@ -33,6 +33,8 @@ public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
     @Override
     protected void onRunFound() {
         network.onRunEffectorFound(this);
+        setForwardFlow(Flow.STILL);
+        streamOfInputs().forEach(i -> i.setForwardFlow(Flow.STILL));
     }
 
 
@@ -40,5 +42,6 @@ public class Effector extends Node<Synapse<Neuron, Effector>, Action> {
     protected void onDeadendFound() {
         network.onPunishedEffectorFound(this);
         setForwardFlow(Flow.STILL);
+        streamOfInputs().forEach(i -> i.setForwardFlow(Flow.STILL));
     }
 }

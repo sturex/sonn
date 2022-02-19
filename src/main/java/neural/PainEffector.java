@@ -7,12 +7,17 @@ import java.util.List;
 
 public class PainEffector extends Node<Synapse<Neuron, PainEffector>, Action> {
 
+    private final Network network;
+
     public PainEffector(Network network) {
         super(network, network.getNodesCount());
-        addOutput(new Action(() -> network.streamOfEffectors()
-                .filter(Node::isForwardRun)
-                .forEach(e -> e.streamOfOutputs()
-                        .forEach(a -> a.setBackwardFlow(Flow.STILL)))));
+        this.network = network;
+        addOutput(new Action(() ->
+        {
+            network.applyPainMode();
+//            network.streamOfEffectors().forEach(e -> e.streamOfOutputs().forEach(a -> a.setPunished(getForwardFlow().toBoolean())));
+        }
+        ));
     }
 
     @Override
@@ -32,11 +37,13 @@ public class PainEffector extends Node<Synapse<Neuron, PainEffector>, Action> {
 
     @Override
     protected void onRunFound() {
-
+        setForwardFlow(Flow.STILL);
+        streamOfInputs().forEach(i -> i.setForwardFlow(Flow.STILL));
     }
 
     @Override
     protected void onDeadendFound() {
-
+        setForwardFlow(Flow.STILL);
+        streamOfInputs().forEach(i -> i.setForwardFlow(Flow.STILL));
     }
 }

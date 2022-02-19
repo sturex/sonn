@@ -86,6 +86,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     public final void triggerConverge() {
+        assert collectedInputCounter == 0;
         isParent = false;
         assert inputSize() != 0 : toString();
         forwardFlow = convergeForward(inputs);
@@ -104,6 +105,7 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     }
 
     public void triggerBackpass() {
+        assert collectedOutputCounter == 0;
         if (outputSize() != 0) {
             backwardFlow = convergeBackward(outputs);
             if (isDeadend()) {
@@ -166,6 +168,11 @@ public abstract class Node<T extends FlowSupplier, U extends FlowConsumer> {
     public final void addOutput(U u) {
         assert !outputs.contains(u);
         outputs.add(u);
+    }
+
+    public void resetFlows() {
+        backwardFlow = Flow.STILL;
+        forwardFlow = Flow.STILL;
     }
 
     @Override
