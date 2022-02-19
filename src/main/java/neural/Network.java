@@ -266,7 +266,6 @@ public class Network implements Graph {
             sidewayNodes.forEach(d -> connect(d, targetNeuron, Synapse.Type.INHIBITORY));
             runEffectors.forEach(d -> connect(targetNeuron, d, Synapse.Type.EXCITATORY, Flow.STILL, Flow.STILL));
             punishedEffectors.forEach(d -> connect(targetNeuron, d, Synapse.Type.INHIBITORY));
-            System.out.println(runEffectors.size() + " " + punishedEffectors.size());
         }
         deadendNodes.clear();
         sidewayNodes.clear();

@@ -12,7 +12,6 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BooleanSupplier;
 
 public class TrainPlayground {
 
@@ -20,13 +19,14 @@ public class TrainPlayground {
     public static final int bound = 2;
 
     public static final int patternSize = 1;
-    public static final int patternLength = 100;
-    public static final int maxNeuronSize = 20;
+    public static final int patternLength = 200;
+    public static final int maxNeuronSize = 200;
     private static int idx;
     private static int inputValue = 0;
     private static final BufferQueue<Integer> buf = new BufferQueue<>(3);
     private static boolean recognized = false;
-    private static boolean patternMatched = false;
+    private static boolean trainCondition = false;
+    private static boolean pain = false;
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -45,39 +45,40 @@ public class TrainPlayground {
         Network network = new Network(listeners, maxNeuronSize);
 
         network.addReceptor(() -> inputValue == 0);
-        network.addReflex(TrainPlayground::trainCondition, TrainPlayground::response);
-        network.addPainReceptor(pain());
+        network.addReflex(() -> trainCondition, TrainPlayground::response);
+        network.addPainReceptor(() -> pain);
 
         for (int[] ints : patternGenerator) {
             recognized = false;
             inputValue = ints[0];
             buf.addLast(inputValue);
+            trainCondition = trainCondition();
             System.out.print(idx++ + ": " + inputValue + " - " + Arrays.toString(buf.toArray()));
             network.tick();
+            pain = pain();
             System.out.println();
             Thread.sleep(200);
         }
 
     }
 
-    private static BooleanSupplier pain() {
-        return () -> {
-            boolean b = !patternMatched && recognized;
-//            recognized = false;
-            return b;
-        };
+    private static boolean pain() {
+        boolean pain = !trainCondition && recognized;
+        if (pain){
+            System.out.print(" - ");
+        }
+        return pain;
     }
 
     private static void response() {
-        System.out.println("*");
+        System.out.print(" * ");
         recognized = true;
     }
 
     private static boolean trainCondition() {
         List<Integer> lastValues = buf.stream().toList();
         if (lastValues.size() == 3) {
-            patternMatched = lastValues.get(0) == 0 && lastValues.get(1) == 1 && lastValues.get(2) == 1;
-            return patternMatched;
+            return lastValues.get(0) == 0 && lastValues.get(1) == 1 && lastValues.get(2) == 1;
         }
         return false;
     }
